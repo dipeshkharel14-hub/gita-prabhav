@@ -1,0 +1,1681 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Gita Darshan — श्रीमद्भगवद्गीता</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600;700&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Noto+Serif+Devanagari:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --gold: #d4af37;
+    --gold-light: #f0d060;
+    --gold-dim: #9a7c20;
+    --saffron: #ff9f43;
+    --saffron-dim: #c47a1e;
+    --bg: #050403;
+    --bg2: #0a0805;
+    --bg3: #100c08;
+    --bg4: #16110c;
+    --bg5: #1d1610;
+    --surface: #1a1410;
+    --surface2: #221c14;
+    --surface3: #2c2418;
+    --border: #3a2e1a;
+    --border2: #4e3e22;
+    --text: #f0e8d0;
+    --text2: #c8b890;
+    --text3: #9a8a60;
+    --text4: #6a5a38;
+    --red: #c0392b;
+    --teal: #1abc9c;
+    --radius: 12px;
+    --radius2: 8px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'EB Garamond', Georgia, serif;
+    font-size: 17px;
+    line-height: 1.7;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ─── NOISE OVERLAY ─── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.4;
+  }
+
+  /* ─── SCROLLBAR ─── */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg2); }
+  ::-webkit-scrollbar-thumb { background: var(--gold-dim); border-radius: 3px; }
+
+  /* ─── UTILITIES ─── */
+  .hidden { display: none !important; }
+  .gold { color: var(--gold); }
+  .saffron { color: var(--saffron); }
+  .sanskrit { font-family: 'Noto Serif Devanagari', serif; }
+  .cinzel { font-family: 'Cinzel', serif; }
+  .cinzel-dec { font-family: 'Cinzel Decorative', serif; }
+  .italic { font-style: italic; }
+
+  /* ─── LOADING SCREEN ─── */
+  #loader {
+    position: fixed; inset: 0; background: var(--bg);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    z-index: 10000; transition: opacity 0.8s ease, visibility 0.8s ease;
+  }
+  #loader.fade-out { opacity: 0; visibility: hidden; }
+  .loader-mantra {
+    font-family: 'Noto Serif Devanagari', serif;
+    font-size: clamp(1.5rem, 4vw, 2.5rem);
+    color: var(--gold);
+    text-align: center;
+    letter-spacing: 0.05em;
+    animation: mantra-glow 2s ease-in-out infinite alternate;
+    margin-bottom: 2rem;
+  }
+  .loader-bar-wrap { width: 200px; height: 2px; background: var(--bg3); border-radius: 1px; overflow: hidden; }
+  .loader-bar { height: 100%; background: linear-gradient(90deg, var(--gold-dim), var(--gold), var(--saffron)); border-radius: 1px; animation: load-progress 2s ease forwards; }
+  @keyframes load-progress { from { width: 0%; } to { width: 100%; } }
+  @keyframes mantra-glow { from { text-shadow: 0 0 20px rgba(212,175,55,0.3); } to { text-shadow: 0 0 40px rgba(212,175,55,0.8), 0 0 80px rgba(212,175,55,0.3); } }
+
+  /* ─── NAV ─── */
+  #nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: linear-gradient(180deg, rgba(5,4,3,0.98) 0%, rgba(5,4,3,0.85) 100%);
+    border-bottom: 1px solid var(--border);
+    backdrop-filter: blur(12px);
+    padding: 0 2rem;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 62px;
+  }
+  .nav-logo {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 1.1rem;
+    color: var(--gold);
+    letter-spacing: 0.08em;
+    text-shadow: 0 0 20px rgba(212,175,55,0.4);
+    cursor: pointer;
+  }
+  .nav-logo span { color: var(--saffron); }
+  .nav-links { display: flex; gap: 0.5rem; align-items: center; }
+  .nav-btn {
+    background: none; border: none; cursor: pointer;
+    color: var(--text3); font-family: 'Cinzel', serif;
+    font-size: 0.78rem; letter-spacing: 0.12em;
+    padding: 0.5rem 0.9rem; border-radius: var(--radius2);
+    text-transform: uppercase; transition: all 0.25s;
+  }
+  .nav-btn:hover, .nav-btn.active { color: var(--gold); background: rgba(212,175,55,0.08); }
+  .nav-icon-btn {
+    background: none; border: none; cursor: pointer;
+    color: var(--text3); padding: 0.5rem;
+    font-size: 1.1rem; border-radius: 50%;
+    transition: all 0.25s; width: 38px; height: 38px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .nav-icon-btn:hover { color: var(--gold); background: rgba(212,175,55,0.1); }
+  .hamburger { display: none; }
+  @media(max-width: 700px) {
+    .nav-links .nav-btn { display: none; }
+    .hamburger { display: flex; }
+  }
+
+  /* ─── HERO ─── */
+  #home {
+    min-height: 100vh;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    position: relative; padding: 80px 2rem 4rem;
+    overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; inset: 0; pointer-events: none;
+    background: radial-gradient(ellipse 80% 70% at 50% 40%, rgba(212,175,55,0.07) 0%, transparent 70%),
+                radial-gradient(ellipse 40% 40% at 20% 80%, rgba(255,159,67,0.05) 0%, transparent 60%),
+                radial-gradient(ellipse 40% 40% at 80% 20%, rgba(212,175,55,0.04) 0%, transparent 60%);
+  }
+  .hero-circles {
+    position: absolute; inset: 0; pointer-events: none;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .hero-circle {
+    position: absolute; border-radius: 50%;
+    border: 1px solid rgba(212,175,55,0.06);
+    animation: rotate-slow linear infinite;
+  }
+  .hero-circle:nth-child(1) { width: 600px; height: 600px; animation-duration: 80s; }
+  .hero-circle:nth-child(2) { width: 800px; height: 800px; animation-duration: 120s; animation-direction: reverse; border-color: rgba(212,175,55,0.04); }
+  .hero-circle:nth-child(3) { width: 1000px; height: 1000px; animation-duration: 160s; border-color: rgba(212,175,55,0.025); }
+  @keyframes rotate-slow { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+  .hero-om {
+    font-family: 'Noto Serif Devanagari', serif;
+    font-size: clamp(5rem, 15vw, 10rem);
+    color: var(--gold);
+    opacity: 0.12;
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    filter: blur(1px);
+    animation: om-breathe 6s ease-in-out infinite;
+  }
+  @keyframes om-breathe { 0%,100%{opacity:0.08;transform:translate(-50%,-50%) scale(1);} 50%{opacity:0.16;transform:translate(-50%,-50%) scale(1.04);} }
+
+  .hero-eyebrow {
+    font-family: 'Cinzel', serif;
+    font-size: 0.75rem; letter-spacing: 0.35em;
+    color: var(--saffron); text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    animation: fade-up 1s ease 0.3s both;
+  }
+  .hero-title {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: clamp(2.2rem, 6vw, 4.5rem);
+    font-weight: 900; text-align: center;
+    color: var(--gold);
+    line-height: 1.15;
+    letter-spacing: 0.03em;
+    text-shadow: 0 0 40px rgba(212,175,55,0.4), 0 0 80px rgba(212,175,55,0.15);
+    margin-bottom: 0.5rem;
+    animation: fade-up 1s ease 0.5s both;
+  }
+  .hero-subtitle-devanagari {
+    font-family: 'Noto Serif Devanagari', serif;
+    font-size: clamp(1.4rem, 3vw, 2rem);
+    color: var(--text2); text-align: center;
+    margin-bottom: 1.5rem;
+    animation: fade-up 1s ease 0.7s both;
+  }
+  .hero-desc {
+    max-width: 600px; text-align: center;
+    color: var(--text3); font-size: 1.05rem;
+    font-style: italic; line-height: 1.8;
+    margin-bottom: 3rem;
+    animation: fade-up 1s ease 0.9s both;
+  }
+  .hero-stats {
+    display: flex; gap: 3rem; margin-bottom: 3rem;
+    animation: fade-up 1s ease 1.1s both;
+  }
+  .hero-stat { text-align: center; }
+  .hero-stat-num {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 2rem; color: var(--gold); display: block;
+    text-shadow: 0 0 20px rgba(212,175,55,0.5);
+  }
+  .hero-stat-label {
+    font-family: 'Cinzel', serif;
+    font-size: 0.7rem; letter-spacing: 0.2em;
+    color: var(--text3); text-transform: uppercase;
+  }
+  .hero-divider {
+    width: 80px; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    margin: 0 auto 3rem;
+    animation: fade-up 1s ease 1s both;
+  }
+  .hero-cta {
+    display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center;
+    animation: fade-up 1s ease 1.3s both;
+  }
+  .btn-primary {
+    font-family: 'Cinzel', serif;
+    font-size: 0.82rem; letter-spacing: 0.2em;
+    text-transform: uppercase;
+    background: linear-gradient(135deg, var(--gold-dim), var(--gold));
+    color: var(--bg); border: none; cursor: pointer;
+    padding: 0.85rem 2.2rem; border-radius: var(--radius2);
+    transition: all 0.3s; position: relative; overflow: hidden;
+    box-shadow: 0 4px 20px rgba(212,175,55,0.25);
+  }
+  .btn-primary::before {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    opacity: 0; transition: opacity 0.3s;
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(212,175,55,0.4); }
+  .btn-primary:hover::before { opacity: 1; }
+  .btn-primary span { position: relative; z-index: 1; }
+  .btn-outline {
+    font-family: 'Cinzel', serif;
+    font-size: 0.82rem; letter-spacing: 0.2em;
+    text-transform: uppercase;
+    background: transparent;
+    color: var(--gold); border: 1px solid var(--gold-dim);
+    cursor: pointer; padding: 0.85rem 2.2rem; border-radius: var(--radius2);
+    transition: all 0.3s;
+  }
+  .btn-outline:hover { background: rgba(212,175,55,0.08); border-color: var(--gold); transform: translateY(-2px); }
+
+  /* ─── DAILY VERSE BANNER ─── */
+  #daily-verse-banner {
+    background: linear-gradient(135deg, var(--bg4), var(--surface));
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--saffron);
+    border-radius: var(--radius);
+    padding: 1.5rem 2rem;
+    margin: 0 auto 4rem;
+    max-width: 800px;
+    position: relative; overflow: hidden;
+  }
+  #daily-verse-banner::before {
+    content: '✦'; position: absolute; right: 1.5rem; top: 1rem;
+    color: var(--saffron); opacity: 0.3; font-size: 2rem;
+  }
+  .dvb-label {
+    font-family: 'Cinzel', serif;
+    font-size: 0.65rem; letter-spacing: 0.3em;
+    text-transform: uppercase; color: var(--saffron);
+    margin-bottom: 0.5rem;
+  }
+  .dvb-ref {
+    font-family: 'Cinzel', serif; font-size: 0.8rem;
+    color: var(--gold); margin-bottom: 0.8rem;
+  }
+  .dvb-sanskrit {
+    font-family: 'Noto Serif Devanagari', serif;
+    font-size: 1.1rem; color: var(--text2);
+    line-height: 1.8; margin-bottom: 0.6rem;
+  }
+  .dvb-translation {
+    font-style: italic; color: var(--text3);
+    font-size: 0.95rem; line-height: 1.7;
+  }
+
+  /* ─── SECTION HEADERS ─── */
+  .section-header {
+    text-align: center; padding: 5rem 2rem 3rem;
+  }
+  .section-eyebrow {
+    font-family: 'Cinzel', serif;
+    font-size: 0.7rem; letter-spacing: 0.4em;
+    text-transform: uppercase; color: var(--saffron);
+    margin-bottom: 1rem;
+  }
+  .section-title {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    color: var(--gold); font-weight: 700;
+    margin-bottom: 1rem;
+    text-shadow: 0 0 30px rgba(212,175,55,0.2);
+  }
+  .section-desc {
+    color: var(--text3); max-width: 500px;
+    margin: 0 auto; font-style: italic;
+  }
+  .section-line {
+    width: 60px; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold-dim), transparent);
+    margin: 1.5rem auto 0;
+  }
+
+  /* ─── SEARCH ─── */
+  #search-section {
+    max-width: 700px; margin: 0 auto 4rem; padding: 0 2rem;
+  }
+  .search-wrap { position: relative; }
+  .search-icon {
+    position: absolute; left: 1.2rem; top: 50%; transform: translateY(-50%);
+    color: var(--gold-dim); font-size: 1rem; pointer-events: none;
+  }
+  #search-input {
+    width: 100%; background: var(--surface);
+    border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 1rem 1rem 1rem 3rem;
+    color: var(--text); font-family: 'EB Garamond', serif;
+    font-size: 1rem; outline: none;
+    transition: border-color 0.25s, box-shadow 0.25s;
+  }
+  #search-input::placeholder { color: var(--text4); }
+  #search-input:focus { border-color: var(--gold-dim); box-shadow: 0 0 0 3px rgba(212,175,55,0.08); }
+  #search-results {
+    position: absolute; top: calc(100% + 8px); left: 0; right: 0;
+    background: var(--surface2); border: 1px solid var(--border2);
+    border-radius: var(--radius); overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+    max-height: 400px; overflow-y: auto; z-index: 50;
+  }
+  .search-result-item {
+    padding: 1rem 1.5rem; cursor: pointer;
+    border-bottom: 1px solid var(--border);
+    transition: background 0.2s;
+  }
+  .search-result-item:hover { background: var(--surface3); }
+  .search-result-ref { font-family: 'Cinzel', serif; font-size: 0.75rem; color: var(--gold); margin-bottom: 0.3rem; }
+  .search-result-text { font-size: 0.9rem; color: var(--text2); line-height: 1.5; }
+  .search-highlight { color: var(--saffron); font-weight: 600; }
+
+  /* ─── CHAPTERS GRID ─── */
+  #chapters {
+    max-width: 1300px; margin: 0 auto; padding: 0 2rem 6rem;
+  }
+  .chapters-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+  .chapter-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.8rem 1.8rem 1.5rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    position: relative; overflow: hidden;
+    display: flex; flex-direction: column;
+  }
+  .chapter-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--gold-dim), transparent);
+    opacity: 0; transition: opacity 0.3s;
+  }
+  .chapter-card:hover { border-color: var(--border2); transform: translateY(-4px); background: var(--surface2); box-shadow: 0 12px 40px rgba(0,0,0,0.4), 0 0 0 1px rgba(212,175,55,0.05); }
+  .chapter-card:hover::before { opacity: 1; }
+  .ch-num {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 2.5rem; color: var(--gold); opacity: 0.15;
+    position: absolute; right: 1.2rem; top: 0.8rem;
+    line-height: 1; pointer-events: none;
+    font-weight: 900;
+  }
+  .ch-badge {
+    font-family: 'Cinzel', serif;
+    font-size: 0.65rem; letter-spacing: 0.25em;
+    text-transform: uppercase; color: var(--saffron);
+    margin-bottom: 0.8rem;
+  }
+  .ch-title-en {
+    font-family: 'Cinzel', serif;
+    font-size: 1.05rem; color: var(--gold);
+    margin-bottom: 0.3rem; font-weight: 600;
+  }
+  .ch-title-sa {
+    font-family: 'Noto Serif Devanagari', serif;
+    font-size: 0.95rem; color: var(--text2);
+    margin-bottom: 0.8rem;
+  }
+  .ch-desc {
+    font-size: 0.88rem; color: var(--text3);
+    line-height: 1.65; flex: 1;
+    margin-bottom: 1rem;
+  }
+  .ch-meta {
+    display: flex; justify-content: space-between; align-items: center;
+    font-family: 'Cinzel', serif;
+    font-size: 0.65rem; letter-spacing: 0.15em;
+    color: var(--text4); text-transform: uppercase;
+    border-top: 1px solid var(--border);
+    padding-top: 0.8rem; margin-top: auto;
+  }
+  .ch-meta-verses { color: var(--gold-dim); }
+
+  /* ─── VERSE VIEWER ─── */
+  #verse-viewer {
+    position: fixed; inset: 0; z-index: 200;
+    background: rgba(0,0,0,0.88);
+    backdrop-filter: blur(6px);
+    display: flex; align-items: center; justify-content: center;
+    padding: 1rem;
+    animation: fade-in 0.3s ease;
+  }
+  .vv-panel {
+    background: var(--bg3);
+    border: 1px solid var(--border2);
+    border-radius: var(--radius);
+    max-width: 780px; width: 100%;
+    max-height: 90vh; overflow-y: auto;
+    position: relative;
+    box-shadow: 0 40px 100px rgba(0,0,0,0.8), 0 0 0 1px rgba(212,175,55,0.05);
+  }
+  .vv-header {
+    padding: 1.8rem 2rem 1.2rem;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: flex-start; justify-content: space-between;
+    position: sticky; top: 0; background: var(--bg3); z-index: 2;
+  }
+  .vv-chapter-label {
+    font-family: 'Cinzel', serif;
+    font-size: 0.7rem; letter-spacing: 0.3em;
+    text-transform: uppercase; color: var(--saffron);
+    margin-bottom: 0.4rem;
+  }
+  .vv-chapter-title {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 1.3rem; color: var(--gold);
+  }
+  .vv-close {
+    background: none; border: none; cursor: pointer;
+    color: var(--text3); font-size: 1.4rem;
+    width: 36px; height: 36px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 50%; transition: all 0.2s;
+    flex-shrink: 0;
+  }
+  .vv-close:hover { color: var(--gold); background: rgba(212,175,55,0.1); }
+  .vv-body { padding: 2rem; }
+  .vv-verse-nav {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 2rem;
+  }
+  .vv-nav-btn {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius2); cursor: pointer;
+    color: var(--text2); padding: 0.6rem 1.2rem;
+    font-family: 'Cinzel', serif; font-size: 0.75rem;
+    letter-spacing: 0.1em; transition: all 0.2s;
+  }
+  .vv-nav-btn:hover { border-color: var(--gold-dim); color: var(--gold); }
+  .vv-nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+  .vv-verse-indicator {
+    font-family: 'Cinzel', serif; font-size: 0.8rem;
+    color: var(--gold); letter-spacing: 0.1em;
+  }
+  .verse-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 2rem; margin-bottom: 1.5rem;
+    position: relative; overflow: hidden;
+  }
+  .verse-card::after {
+    content: attr(data-ref);
+    position: absolute; right: 1.2rem; top: 0.8rem;
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 0.65rem; color: var(--gold-dim);
+    letter-spacing: 0.1em;
+  }
+  .verse-sanskrit {
+    font-family: 'Noto Serif Devanagari', serif;
+    font-size: 1.3rem; line-height: 2;
+    color: var(--text); margin-bottom: 1rem;
+    border-bottom: 1px solid var(--border); padding-bottom: 1rem;
+  }
+  .verse-trans {
+    font-size: 0.85rem; color: var(--text3); letter-spacing: 0.05em;
+    font-style: italic; margin-bottom: 1rem;
+    line-height: 1.7;
+  }
+  .verse-meaning {
+    font-size: 1rem; color: var(--text2);
+    line-height: 1.8; border-top: 1px solid var(--border);
+    padding-top: 1rem; margin-top: 0;
+  }
+  .verse-actions {
+    display: flex; gap: 0.8rem; margin-top: 1.2rem;
+  }
+  .verse-action-btn {
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: var(--radius2); cursor: pointer;
+    color: var(--text3); padding: 0.45rem 1rem;
+    font-family: 'Cinzel', serif; font-size: 0.7rem;
+    letter-spacing: 0.1em; transition: all 0.2s;
+  }
+  .verse-action-btn:hover { border-color: var(--gold-dim); color: var(--gold); }
+  .verse-action-btn.bookmarked { border-color: var(--saffron); color: var(--saffron); }
+
+  /* ─── QUIZ ─── */
+  #quiz-section {
+    max-width: 700px; margin: 0 auto 6rem; padding: 0 2rem;
+  }
+  .quiz-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 2.5rem;
+  }
+  .quiz-progress-bar {
+    height: 3px; background: var(--bg4);
+    border-radius: 2px; margin-bottom: 2rem; overflow: hidden;
+  }
+  .quiz-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--gold-dim), var(--saffron));
+    border-radius: 2px; transition: width 0.4s ease;
+  }
+  .quiz-question-label {
+    font-family: 'Cinzel', serif; font-size: 0.65rem;
+    letter-spacing: 0.25em; text-transform: uppercase;
+    color: var(--saffron); margin-bottom: 1rem;
+  }
+  .quiz-question {
+    font-family: 'Noto Serif Devanagari', serif;
+    font-size: 1.2rem; color: var(--text); line-height: 1.8;
+    margin-bottom: 0.5rem;
+  }
+  .quiz-question-en {
+    font-style: italic; color: var(--text3);
+    font-size: 0.9rem; margin-bottom: 2rem; line-height: 1.7;
+  }
+  .quiz-options { display: flex; flex-direction: column; gap: 0.8rem; }
+  .quiz-option {
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: var(--radius2); padding: 1rem 1.4rem;
+    cursor: pointer; transition: all 0.2s;
+    color: var(--text2); font-size: 0.95rem; line-height: 1.6;
+    text-align: left; font-family: 'EB Garamond', serif;
+  }
+  .quiz-option:hover:not(:disabled) { border-color: var(--gold-dim); color: var(--text); background: var(--surface3); }
+  .quiz-option.correct { border-color: var(--teal) !important; color: var(--teal) !important; background: rgba(26,188,156,0.08) !important; }
+  .quiz-option.wrong { border-color: var(--red) !important; color: var(--red) !important; background: rgba(192,57,43,0.08) !important; }
+  .quiz-option:disabled { cursor: not-allowed; }
+  .quiz-feedback {
+    margin-top: 1.5rem; padding: 1rem 1.4rem;
+    border-radius: var(--radius2); font-size: 0.95rem;
+    line-height: 1.7; display: none;
+  }
+  .quiz-feedback.show { display: block; }
+  .quiz-feedback.correct { background: rgba(26,188,156,0.06); border: 1px solid rgba(26,188,156,0.2); color: var(--teal); }
+  .quiz-feedback.wrong { background: rgba(192,57,43,0.06); border: 1px solid rgba(192,57,43,0.2); color: #e74c3c; }
+  .quiz-next-btn {
+    margin-top: 1.5rem;
+    font-family: 'Cinzel', serif; font-size: 0.8rem;
+    letter-spacing: 0.15em; text-transform: uppercase;
+    background: linear-gradient(135deg, var(--gold-dim), var(--gold));
+    color: var(--bg); border: none; cursor: pointer;
+    padding: 0.85rem 2rem; border-radius: var(--radius2);
+    transition: all 0.25s; display: none;
+  }
+  .quiz-next-btn.show { display: block; }
+  .quiz-next-btn:hover { opacity: 0.88; transform: translateY(-1px); }
+  .quiz-score {
+    text-align: center; padding: 2rem 0;
+    display: none;
+  }
+  .quiz-score.show { display: block; }
+  .quiz-score-num {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 4rem; color: var(--gold);
+    text-shadow: 0 0 30px rgba(212,175,55,0.4);
+    display: block; margin-bottom: 0.5rem;
+  }
+  .quiz-score-label { color: var(--text2); font-size: 1rem; margin-bottom: 2rem; }
+
+  /* ─── MEDITATION TIMER ─── */
+  #meditation {
+    max-width: 500px; margin: 0 auto 6rem; padding: 0 2rem;
+  }
+  .med-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 3rem 2rem; text-align: center;
+    position: relative; overflow: hidden;
+  }
+  .med-card::before {
+    content: 'ॐ'; position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Noto Serif Devanagari', serif;
+    font-size: 12rem; color: var(--gold); opacity: 0.03;
+    pointer-events: none; letter-spacing: 0;
+  }
+  .med-circle-wrap {
+    position: relative; display: inline-block;
+    margin-bottom: 2rem;
+  }
+  .med-circle {
+    width: 160px; height: 160px;
+    border-radius: 50%;
+    border: 2px solid var(--border2);
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+  }
+  .med-circle-svg {
+    position: absolute; inset: -8px; width: calc(100% + 16px); height: calc(100% + 16px);
+    transform: rotate(-90deg);
+  }
+  .med-circle-progress {
+    fill: none; stroke: var(--gold); stroke-width: 2;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 1s linear;
+  }
+  .med-time {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 2.2rem; color: var(--gold);
+    text-shadow: 0 0 20px rgba(212,175,55,0.4);
+  }
+  .med-label {
+    font-family: 'Cinzel', serif; font-size: 0.7rem;
+    letter-spacing: 0.3em; text-transform: uppercase;
+    color: var(--text3); margin-bottom: 2rem;
+  }
+  .med-mantra-display {
+    font-family: 'Noto Serif Devanagari', serif;
+    font-size: 1.2rem; color: var(--text2);
+    margin-bottom: 0.5rem; line-height: 1.8;
+    min-height: 2.4rem;
+  }
+  .med-mantra-en {
+    font-size: 0.85rem; color: var(--text4);
+    font-style: italic; margin-bottom: 2rem;
+  }
+  .med-controls { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-bottom: 1.5rem; }
+  .med-btn {
+    font-family: 'Cinzel', serif; font-size: 0.75rem;
+    letter-spacing: 0.15em; text-transform: uppercase;
+    background: var(--surface2); border: 1px solid var(--border2);
+    color: var(--text2); cursor: pointer;
+    padding: 0.7rem 1.5rem; border-radius: var(--radius2);
+    transition: all 0.25s;
+  }
+  .med-btn:hover { border-color: var(--gold-dim); color: var(--gold); }
+  .med-btn.active { background: linear-gradient(135deg, var(--gold-dim), var(--gold)); color: var(--bg); border-color: transparent; }
+  .med-duration-select {
+    display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap;
+  }
+  .med-dur-btn {
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 20px; cursor: pointer;
+    color: var(--text3); padding: 0.4rem 1rem;
+    font-family: 'Cinzel', serif; font-size: 0.7rem;
+    letter-spacing: 0.1em; transition: all 0.2s;
+  }
+  .med-dur-btn:hover, .med-dur-btn.selected { border-color: var(--gold-dim); color: var(--gold); }
+
+  /* ─── BOOKMARKS ─── */
+  #bookmarks-section {
+    max-width: 800px; margin: 0 auto 6rem; padding: 0 2rem;
+  }
+  .bookmark-list { display: flex; flex-direction: column; gap: 1rem; }
+  .bookmark-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--gold-dim);
+    border-radius: var(--radius);
+    padding: 1.5rem 1.8rem;
+    cursor: pointer; transition: all 0.25s;
+    position: relative;
+  }
+  .bookmark-item:hover { border-left-color: var(--gold); background: var(--surface2); }
+  .bookmark-ref {
+    font-family: 'Cinzel', serif; font-size: 0.75rem;
+    color: var(--gold); letter-spacing: 0.1em; margin-bottom: 0.5rem;
+  }
+  .bookmark-sanskrit {
+    font-family: 'Noto Serif Devanagari', serif;
+    font-size: 0.95rem; color: var(--text2); line-height: 1.7;
+    margin-bottom: 0.5rem;
+  }
+  .bookmark-meaning { font-size: 0.88rem; color: var(--text3); font-style: italic; line-height: 1.6; }
+  .bookmark-remove {
+    position: absolute; right: 1rem; top: 1rem;
+    background: none; border: none; cursor: pointer;
+    color: var(--text4); font-size: 0.9rem;
+    transition: color 0.2s;
+  }
+  .bookmark-remove:hover { color: var(--red); }
+  .empty-state {
+    text-align: center; padding: 4rem 2rem;
+    color: var(--text4); font-style: italic;
+  }
+  .empty-state-icon { font-size: 3rem; margin-bottom: 1rem; opacity: 0.3; }
+
+  /* ─── PHILOSOPHY SECTION ─── */
+  #philosophy {
+    max-width: 900px; margin: 0 auto 6rem; padding: 0 2rem;
+  }
+  .phil-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1.5rem; }
+  .phil-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 2rem;
+    transition: all 0.3s;
+  }
+  .phil-card:hover { border-color: var(--border2); transform: translateY(-3px); }
+  .phil-icon { font-size: 2rem; margin-bottom: 1rem; }
+  .phil-title {
+    font-family: 'Cinzel', serif; font-size: 1rem;
+    color: var(--gold); margin-bottom: 0.4rem;
+    font-weight: 600;
+  }
+  .phil-title-sa {
+    font-family: 'Noto Serif Devanagari', serif;
+    font-size: 0.85rem; color: var(--saffron);
+    margin-bottom: 0.8rem;
+  }
+  .phil-text { font-size: 0.9rem; color: var(--text3); line-height: 1.7; }
+
+  /* ─── FOOTER ─── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 3rem 2rem;
+    text-align: center;
+    background: var(--bg2);
+  }
+  .footer-om {
+    font-family: 'Noto Serif Devanagari', serif;
+    font-size: 2rem; color: var(--gold); opacity: 0.5;
+    margin-bottom: 1rem; display: block;
+  }
+  .footer-text {
+    font-size: 0.82rem; color: var(--text4);
+    font-style: italic; line-height: 1.7; margin-bottom: 0.5rem;
+  }
+  .footer-credit {
+    font-family: 'Cinzel', serif; font-size: 0.65rem;
+    letter-spacing: 0.25em; text-transform: uppercase;
+    color: var(--gold-dim);
+  }
+
+  /* ─── TAB SECTIONS ─── */
+  .page-section { display: none; }
+  .page-section.active { display: block; }
+
+  /* ─── TOAST ─── */
+  #toast {
+    position: fixed; bottom: 2rem; right: 2rem;
+    background: var(--surface2); border: 1px solid var(--gold-dim);
+    border-radius: var(--radius2); padding: 0.8rem 1.5rem;
+    font-family: 'Cinzel', serif; font-size: 0.75rem;
+    letter-spacing: 0.1em; color: var(--gold);
+    z-index: 500; opacity: 0; transform: translateY(10px);
+    transition: all 0.3s; pointer-events: none;
+  }
+  #toast.show { opacity: 1; transform: translateY(0); }
+
+  /* ─── ANIMATIONS ─── */
+  @keyframes fade-up { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+
+  /* ─── RESPONSIVE ─── */
+  @media(max-width: 600px) {
+    .hero-stats { gap: 1.5rem; }
+    .hero-stat-num { font-size: 1.5rem; }
+    .chapters-grid { grid-template-columns: 1fr; }
+    .vv-body { padding: 1.2rem; }
+    .verse-card { padding: 1.3rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- LOADER -->
+<div id="loader">
+  <div class="loader-mantra">ॐ नमो भगवते वासुदेवाय</div>
+  <div class="loader-bar-wrap"><div class="loader-bar"></div></div>
+</div>
+
+<!-- NAV -->
+<nav id="nav">
+  <div class="nav-logo" onclick="showSection('home')">Gita <span>Darshan</span></div>
+  <div class="nav-links">
+    <button class="nav-btn active" onclick="showSection('home',this)">Home</button>
+    <button class="nav-btn" onclick="showSection('chapters-page',this)">Chapters</button>
+    <button class="nav-btn" onclick="showSection('quiz-page',this)">Quiz</button>
+    <button class="nav-btn" onclick="showSection('meditation-page',this)">Meditate</button>
+    <button class="nav-btn" onclick="showSection('philosophy-page',this)">Wisdom</button>
+    <button class="nav-btn" onclick="showSection('bookmarks-page',this)">Bookmarks</button>
+    <button class="nav-icon-btn hamburger" onclick="toggleMobileMenu()">☰</button>
+  </div>
+</nav>
+
+<!-- MOBILE MENU -->
+<div id="mobile-menu" style="display:none;position:fixed;top:62px;left:0;right:0;z-index:99;background:var(--bg2);border-bottom:1px solid var(--border);padding:1rem 2rem;flex-direction:column;gap:0.5rem;">
+  <button class="nav-btn" style="text-align:left;" onclick="showSection('home');toggleMobileMenu()">Home</button>
+  <button class="nav-btn" style="text-align:left;" onclick="showSection('chapters-page');toggleMobileMenu()">Chapters</button>
+  <button class="nav-btn" style="text-align:left;" onclick="showSection('quiz-page');toggleMobileMenu()">Quiz</button>
+  <button class="nav-btn" style="text-align:left;" onclick="showSection('meditation-page');toggleMobileMenu()">Meditate</button>
+  <button class="nav-btn" style="text-align:left;" onclick="showSection('philosophy-page');toggleMobileMenu()">Wisdom</button>
+  <button class="nav-btn" style="text-align:left;" onclick="showSection('bookmarks-page');toggleMobileMenu()">Bookmarks</button>
+</div>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<!-- VERSE VIEWER MODAL -->
+<div id="verse-viewer" class="hidden">
+  <div class="vv-panel">
+    <div class="vv-header">
+      <div>
+        <div class="vv-chapter-label" id="vv-ch-label">Chapter</div>
+        <div class="vv-chapter-title" id="vv-ch-title">Title</div>
+      </div>
+      <button class="vv-close" onclick="closeVerseViewer()">✕</button>
+    </div>
+    <div class="vv-body">
+      <div class="vv-verse-nav">
+        <button class="vv-nav-btn" id="vv-prev" onclick="navigateVerse(-1)">← Prev</button>
+        <div class="vv-verse-indicator" id="vv-indicator">1 / 1</div>
+        <button class="vv-nav-btn" id="vv-next" onclick="navigateVerse(1)">Next →</button>
+      </div>
+      <div id="vv-content"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ HOME ══════════ -->
+<div class="page-section active" id="home">
+  <section id="hero-section" style="min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:80px 2rem 4rem;position:relative;overflow:hidden;">
+    <div class="hero-bg"></div>
+    <div class="hero-circles">
+      <div class="hero-circle"></div>
+      <div class="hero-circle"></div>
+      <div class="hero-circle"></div>
+    </div>
+    <div class="hero-om">ॐ</div>
+
+    <div class="hero-eyebrow">A Dipesh Kharel Presentation</div>
+    <h1 class="hero-title">Gita Darshan</h1>
+    <div class="hero-subtitle-devanagari">श्रीमद्भगवद्गीता</div>
+    <p class="hero-desc">The Song of the Divine Lord — 700 verses of timeless wisdom spoken by Sri Krishna to Arjuna on the battlefield of Kurukshetra, revealing the path to liberation, duty, and the eternal Self.</p>
+    <div class="hero-divider"></div>
+    <div class="hero-stats">
+      <div class="hero-stat"><span class="hero-stat-num">18</span><span class="hero-stat-label">Chapters</span></div>
+      <div class="hero-stat"><span class="hero-stat-num">700</span><span class="hero-stat-label">Verses</span></div>
+      <div class="hero-stat"><span class="hero-stat-num">108</span><span class="hero-stat-label">Key Shlokas</span></div>
+    </div>
+    <div class="hero-cta">
+      <button class="btn-primary" onclick="showSection('chapters-page')"><span>Explore Chapters</span></button>
+      <button class="btn-outline" onclick="showSection('quiz-page')">Test Knowledge</button>
+    </div>
+  </section>
+
+  <!-- DAILY VERSE -->
+  <div style="max-width:800px;margin:0 auto;padding:0 2rem;">
+    <div id="daily-verse-banner">
+      <div class="dvb-label">✦ Today's Sacred Verse</div>
+      <div class="dvb-ref" id="dvb-ref"></div>
+      <div class="dvb-sanskrit" id="dvb-sanskrit"></div>
+      <div class="dvb-translation" id="dvb-translation"></div>
+    </div>
+  </div>
+
+  <!-- SEARCH -->
+  <div class="section-header">
+    <div class="section-eyebrow">Seek & Find</div>
+    <h2 class="section-title">Search the Gita</h2>
+    <p class="section-desc">Search across all verses, translations, and topics</p>
+    <div class="section-line"></div>
+  </div>
+  <div id="search-section">
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="search-input" placeholder="Search by keyword, verse reference, or topic..." oninput="handleSearch(this.value)"/>
+      <div id="search-results" class="hidden"></div>
+    </div>
+  </div>
+
+  <!-- QUICK CHAPTERS -->
+  <div class="section-header">
+    <div class="section-eyebrow">The Divine Song</div>
+    <h2 class="section-title">All 18 Chapters</h2>
+    <p class="section-desc">Journey through the complete wisdom of the Bhagavad Gita</p>
+    <div class="section-line"></div>
+  </div>
+  <div style="max-width:1300px;margin:0 auto;padding:0 2rem 6rem;" id="home-chapters-grid">
+    <!-- chapters rendered by JS -->
+  </div>
+</div>
+
+<!-- ══════════ CHAPTERS PAGE ══════════ -->
+<div class="page-section" id="chapters-page">
+  <div class="section-header" style="padding-top:100px;">
+    <div class="section-eyebrow">The Divine Scripture</div>
+    <h2 class="section-title">Eighteen Chapters</h2>
+    <p class="section-desc">Each chapter reveals a different dimension of Reality</p>
+    <div class="section-line"></div>
+  </div>
+  <div id="chapters" style="max-width:1300px;margin:0 auto;padding:0 2rem 6rem;">
+    <div class="chapters-grid" id="chapters-grid-full"></div>
+  </div>
+</div>
+
+<!-- ══════════ QUIZ PAGE ══════════ -->
+<div class="page-section" id="quiz-page">
+  <div class="section-header" style="padding-top:100px;">
+    <div class="section-eyebrow">Test Your Knowledge</div>
+    <h2 class="section-title">Gita Quiz</h2>
+    <p class="section-desc">How deeply have you absorbed the divine teachings?</p>
+    <div class="section-line"></div>
+  </div>
+  <div id="quiz-section">
+    <div class="quiz-card" id="quiz-card">
+      <div class="quiz-progress-bar"><div class="quiz-progress-fill" id="quiz-progress" style="width:0%"></div></div>
+      <div class="quiz-question-label" id="quiz-q-label">Question 1 of 10</div>
+      <div class="quiz-question" id="quiz-q-sa"></div>
+      <div class="quiz-question-en" id="quiz-q-en"></div>
+      <div class="quiz-options" id="quiz-options"></div>
+      <div class="quiz-feedback" id="quiz-feedback"></div>
+      <button class="quiz-next-btn" id="quiz-next" onclick="nextQuizQuestion()">Next Question →</button>
+      <div class="quiz-score" id="quiz-score-panel">
+        <span class="quiz-score-num" id="quiz-score-num">0/10</span>
+        <div class="quiz-score-label" id="quiz-score-msg">Quiz Complete!</div>
+        <button class="btn-primary" style="margin-top:1rem;" onclick="startQuiz()"><span>Try Again</span></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ MEDITATION PAGE ══════════ -->
+<div class="page-section" id="meditation-page">
+  <div class="section-header" style="padding-top:100px;">
+    <div class="section-eyebrow">Inner Stillness</div>
+    <h2 class="section-title">Mantra Meditation</h2>
+    <p class="section-desc">Anchor your mind in the divine names. Breathe. Be still.</p>
+    <div class="section-line"></div>
+  </div>
+  <div id="meditation">
+    <div class="med-card">
+      <div class="med-label">Sacred Timer</div>
+      <div class="med-circle-wrap">
+        <div class="med-circle">
+          <svg class="med-circle-svg" viewBox="0 0 176 176">
+            <circle cx="88" cy="88" r="82" fill="none" stroke="var(--border)" stroke-width="2"/>
+            <circle class="med-circle-progress" id="med-progress-circle"
+              cx="88" cy="88" r="82"
+              stroke-dasharray="515" stroke-dashoffset="0"/>
+          </svg>
+          <div class="med-time" id="med-time-display">05:00</div>
+        </div>
+      </div>
+      <div class="med-mantra-display" id="med-mantra-display">ॐ नमो भगवते वासुदेवाय</div>
+      <div class="med-mantra-en" id="med-mantra-en">Om, salutations to the Lord who dwells in all beings</div>
+      <div class="med-controls">
+        <button class="med-btn" id="med-start-btn" onclick="toggleMeditation()">▶ Begin</button>
+        <button class="med-btn" onclick="resetMeditation()">↺ Reset</button>
+      </div>
+      <div class="med-duration-select">
+        <button class="med-dur-btn selected" onclick="setMedDuration(5,this)">5 min</button>
+        <button class="med-dur-btn" onclick="setMedDuration(10,this)">10 min</button>
+        <button class="med-dur-btn" onclick="setMedDuration(15,this)">15 min</button>
+        <button class="med-dur-btn" onclick="setMedDuration(21,this)">21 min</button>
+        <button class="med-dur-btn" onclick="setMedDuration(108,this)">108 min</button>
+      </div>
+      <div style="margin-top:2rem;padding-top:1.5rem;border-top:1px solid var(--border);">
+        <div style="font-family:'Cinzel',serif;font-size:0.65rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--text4);margin-bottom:1rem;text-align:center;">Choose Mantra</div>
+        <div style="display:flex;flex-wrap:wrap;gap:0.5rem;justify-content:center;" id="mantra-select-btns"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ PHILOSOPHY PAGE ══════════ -->
+<div class="page-section" id="philosophy-page">
+  <div class="section-header" style="padding-top:100px;">
+    <div class="section-eyebrow">Core Teachings</div>
+    <h2 class="section-title">The Wisdom Pillars</h2>
+    <p class="section-desc">The six supreme doctrines that form the bedrock of Gita philosophy</p>
+    <div class="section-line"></div>
+  </div>
+  <div id="philosophy" style="max-width:1100px;margin:0 auto;padding:0 2rem 6rem;">
+    <div class="phil-grid" id="phil-grid"></div>
+    <div style="margin-top:4rem;">
+      <div class="section-header" style="padding-top:0;padding-bottom:2rem;">
+        <div class="section-eyebrow">Famous Verses</div>
+        <h2 class="section-title">Most Revered Shlokas</h2>
+        <div class="section-line"></div>
+      </div>
+      <div id="famous-verses-list"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ BOOKMARKS PAGE ══════════ -->
+<div class="page-section" id="bookmarks-page">
+  <div class="section-header" style="padding-top:100px;">
+    <div class="section-eyebrow">Your Collection</div>
+    <h2 class="section-title">Saved Verses</h2>
+    <p class="section-desc">Your personal treasury of divine wisdom</p>
+    <div class="section-line"></div>
+  </div>
+  <div id="bookmarks-section">
+    <div class="bookmark-list" id="bookmark-list"></div>
+  </div>
+</div>
+
+<footer>
+  <span class="footer-om">ॐ</span>
+  <p class="footer-text">"Let right deeds be thy motive, not the fruit which comes from them."</p>
+  <p class="footer-text" style="font-family:'Noto Serif Devanagari',serif;font-size:0.95rem;">कर्मण्येवाधिकारस्ते मा फलेषु कदाचन</p>
+  <div style="height:1.5rem;"></div>
+  <div class="footer-credit">Gita Darshan · Crafted by Dipesh Kharel · May All Beings Be Blessed</div>
+</footer>
+
+<script>
+// ════════════════════════════════════════
+//  DATA — 18 CHAPTERS
+// ════════════════════════════════════════
+const CHAPTERS = [
+  { num:1, en:"Arjuna's Sorrow", sa:"अर्जुन विषाद योग", trans:"Arjuna Vishada Yoga", verses:47, theme:"Arjuna's Dilemma", desc:"On the battlefield of Kurukshetra, Arjuna sees his kinsmen arrayed against him and is overcome with grief, despondency, and moral confusion — unable to fight." },
+  { num:2, en:"Transcendental Knowledge", sa:"सांख्य योग", trans:"Sankhya Yoga", verses:72, theme:"Immortal Self", desc:"Krishna imparts the fundamental knowledge of the eternal Self (Atman), the impermanence of the body, the nature of the Soul, and the concept of Nishkama Karma (desireless action)." },
+  { num:3, en:"Path of Action", sa:"कर्म योग", trans:"Karma Yoga", verses:43, theme:"Selfless Duty", desc:"Krishna explains that one cannot escape action simply by renouncing work. He teaches the yoga of selfless action — performing one's duty without attachment to results." },
+  { num:4, en:"Divine Knowledge", sa:"ज्ञान कर्म संन्यास योग", trans:"Jnana Karma Sannyas Yoga", verses:42, theme:"Divine Incarnation", desc:"Krishna reveals the ancient lineage of this knowledge, the mystery of divine incarnation (avatara), the nature of sacrifice, and how action performed as sacrifice leads to liberation." },
+  { num:5, en:"Action & Renunciation", sa:"कर्म संन्यास योग", trans:"Karma Sannyas Yoga", verses:29, theme:"True Renunciation", desc:"Krishna reconciles the apparent conflict between knowledge and action — showing that the wise person who acts without doership is both a karma yogi and a jnana yogi simultaneously." },
+  { num:6, en:"Meditation", sa:"ध्यान योग", trans:"Dhyana Yoga", verses:47, theme:"Inner Mastery", desc:"The yoga of meditation — Krishna describes how to establish the mind in steady meditation, the qualities of the true yogi, and assurance that the spiritual seeker is never lost." },
+  { num:7, en:"Knowledge of the Absolute", sa:"ज्ञान विज्ञान योग", trans:"Jnana Vijnana Yoga", verses:30, theme:"Nature of God", desc:"Krishna reveals His divine nature as both material and spiritual reality, explains the four types of devotees who seek Him, and distinguishes between lower and higher nature." },
+  { num:8, en:"Path to the Supreme", sa:"अक्षर ब्रह्म योग", trans:"Akshar Brahman Yoga", verses:28, theme:"Beyond Death", desc:"Krishna teaches about Brahman, the Supreme Imperishable, the nature of the soul at the time of death, and the two paths — the path of no-return and the path of return." },
+  { num:9, en:"Royal Knowledge", sa:"राजविद्या राजगुह्य योग", trans:"Rajavidya Rajaguhya Yoga", verses:34, theme:"Supreme Devotion", desc:"The 'king of knowledge and secrets' — Krishna reveals His supreme nature as the foundation and sustainer of the universe, and the supreme efficacy of unconditional devotion." },
+  { num:10, en:"Divine Manifestations", sa:"विभूति योग", trans:"Vibhuti Yoga", verses:42, theme:"Divine Glories", desc:"Krishna describes His infinite divine manifestations — He is the beginning, middle, and end of all creation. Arjuna receives a vision of Krishna's limitless divine expressions." },
+  { num:11, en:"Cosmic Vision", sa:"विश्वरूप दर्शन योग", trans:"Vishvarupa Darshan Yoga", verses:55, theme:"Universal Form", desc:"The climactic revelation — Krishna grants Arjuna divine sight and reveals His terrifying, magnificent, all-encompassing Universal Form (Vishvarupa), which transcends all human comprehension." },
+  { num:12, en:"Path of Devotion", sa:"भक्ति योग", trans:"Bhakti Yoga", verses:20, theme:"Pure Devotion", desc:"Krishna declares that devotion (bhakti) is the highest and most accessible path. He enumerates the divine qualities of the true devotee — one who is dear to Him above all else." },
+  { num:13, en:"Field & Its Knower", sa:"क्षेत्र क्षेत्रज्ञ विभाग योग", trans:"Kshetra Kshetrajna Yoga", verses:35, theme:"Self & Matter", desc:"The profound distinction between the Field (body/matter/Kshetra) and the Knower of the Field (pure consciousness/Kshetrajna) — the key to spiritual discrimination and liberation." },
+  { num:14, en:"Three Modes of Nature", sa:"गुणत्रय विभाग योग", trans:"Gunatraya Vibhaga Yoga", verses:27, theme:"Tamas Rajas Sattva", desc:"Krishna explains the three fundamental qualities (gunas) of material nature — Sattva (purity), Rajas (passion), and Tamas (inertia) — and how to transcend them all." },
+  { num:15, en:"Supreme Person", sa:"पुरुषोत्तम योग", trans:"Purushottama Yoga", verses:20, theme:"The Cosmic Tree", desc:"Using the metaphor of the upside-down cosmic Ashvattha tree, Krishna describes the transcendent reality beyond both the perishable and the imperishable — the Supreme Person (Purushottama)." },
+  { num:16, en:"Divine & Demonic Natures", sa:"दैवासुर संपद विभाग योग", trans:"Daiv-Asur Sampad Yoga", verses:24, theme:"Light & Darkness", desc:"Krishna distinguishes between divine virtues that lead to liberation and demonic tendencies that lead to bondage — pride, arrogance, desire, anger, and greed being the triple gates to hell." },
+  { num:17, en:"Three Divisions of Faith", sa:"श्रद्धात्रय विभाग योग", trans:"Shraddhatraya Vibhaga Yoga", verses:28, theme:"Faith & Food", desc:"How the three gunas shape each person's faith, worship, austerity, and charity. The chapter also introduces the sacred syllable OM TAT SAT as the designation of the Absolute." },
+  { num:18, en:"Liberation Through Renunciation", sa:"मोक्ष संन्यास योग", trans:"Moksha Sannyas Yoga", verses:78, theme:"Final Liberation", desc:"The grand synthesis — Krishna reconciles all paths and delivers the supreme secret: 'Abandon all varieties of dharma and take exclusive refuge in Me alone. I will deliver you from all sins.' Then silence." }
+];
+
+// ════════════════════════════════════════
+//  VERSES DATABASE — 108 KEY SHLOKAS
+// ════════════════════════════════════════
+const VERSES = [
+  // CHAPTER 1
+  { ch:1, v:1, ref:"1.1", sa:"धृतराष्ट्र उवाच\nधर्मक्षेत्रे कुरुक्षेत्रे समवेता युयुत्सवः।\nमामकाः पाण्डवाश्चैव किमकुर्वत संजय।।", trans:"dharmakshetre kurukshetre samaveta yuyutsavah | mamakah pandavash chaiva kim akurvata sanjaya", meaning:"Dhritarashtra said: O Sanjaya, after assembling at the holy place of pilgrimage Kurukshetra, desiring to fight, what did my sons and the sons of Pandu do?" },
+  { ch:1, v:28, ref:"1.28", sa:"दृष्ट्वेमं स्वजनं कृष्ण युयुत्सुं समुपस्थितम्।\nसीदन्ति मम गात्राणि मुखं च परिशुष्यति।।", trans:"drishtvedam svajanam krishna yuyutsum samupasthitam | sidanti mama gatrani mukham cha parishushyati", meaning:"Arjuna said: O Krishna, seeing my own kinsmen assembled here desiring to fight, my limbs fail me and my mouth becomes parched." },
+  // CHAPTER 2
+  { ch:2, v:3, ref:"2.3", sa:"क्लैब्यं मा स्म गमः पार्थ नैतत्त्वय्युपपद्यते।\nक्षुद्रं हृदयदौर्बल्यं त्यक्त्वोत्तिष्ठ परन्तप।।", trans:"klaibyam ma sma gamah partha naitattvayyupapadyate | kshudram hridayadaurbalyam tyaktvotsishtha parantapa", meaning:"O Partha, do not yield to this cowardice. It does not become you. Shake off your faint-heartedness and arise, O Scorcher of enemies." },
+  { ch:2, v:11, ref:"2.11", sa:"अशोच्यानन्वशोचस्त्वं प्रज्ञावादांश्च भाषसे।\nगतासूनगतासूंश्च नानुशोचन्ति पण्डिताः।।", trans:"ashochyan anvasochas tvam prajna-vadams cha bhashase | gatashun agatashumsh cha nanushochanti panditah", meaning:"You grieve for those who are beyond grief, and yet speak words of wisdom. The wise grieve neither for the living nor for the dead." },
+  { ch:2, v:13, ref:"2.13", sa:"देहिनोऽस्मिन् यथा देहे कौमारं यौवनं जरा।\nतथा देहान्तरप्राप्तिर्धीरस्तत्र न मुह्यति।।", trans:"dehino'smin yatha dehe kaumaram yauvanam jara | tatha dehantara-praptir dhiras tatra na muhyati", meaning:"Just as the embodied soul passes through childhood, youth, and old age in this body, similarly it passes into another body at death. The wise are not deluded by this." },
+  { ch:2, v:14, ref:"2.14", sa:"मात्रास्पर्शास्तु कौन्तेय शीतोष्णसुखदुःखदाः।\nआगमापायिनोऽनित्यास्तांस्तितिक्षस्व भारत।।", trans:"matra-sparshas tu kaunteya shitoshna-sukha-duhkha-dah | agamapayino'nityas tams titikshsva bharata", meaning:"O son of Kunti, the contacts between the senses and their objects, which give rise to feelings of heat and cold, pleasure and pain, have a beginning and an end — they are impermanent. Endure them, O Arjuna." },
+  { ch:2, v:17, ref:"2.17", sa:"अविनाशि तु तद्विद्धि येन सर्वमिदं ततम्।\nविनाशमव्ययस्यास्य न कश्चित्कर्तुमर्हति।।", trans:"avinashi tu tad viddhi yena sarvam idam tatam | vinasham avyayasyasya na kashchit kartum arhati", meaning:"Know that to be imperishable by which all this universe is pervaded. No one is capable of destroying the indestructible." },
+  { ch:2, v:19, ref:"2.19", sa:"य एनं वेत्ति हन्तारं यश्चैनं मन्यते हतम्।\nउभौ तौ न विजानीतो नायं हन्ति न हन्यते।।", trans:"ya enam vetti hantaram yash chainam manyate hatam | ubhau tau na vijanito nayam hanti na hanyate", meaning:"He who thinks that this Self slays, and he who thinks that it is slain — both of them fail to perceive the truth: this does not slay, nor is it slain." },
+  { ch:2, v:20, ref:"2.20", sa:"न जायते म्रियते वा कदाचिन् नायं भूत्वा भविता वा न भूयः।\nअजो नित्यः शाश्वतोऽयं पुराणो न हन्यते हन्यमाने शरीरे।।", trans:"na jayate mriyate va kadachin nayam bhutva bhavita va na bhuyah | ajo nityah shashvato'yam purano na hanyate hanyamane sharire", meaning:"The soul is never born nor dies at any time. It has not come into being, does not come into being, and will not come into being. It is unborn, eternal, ever-existing, and primeval. It is not slain when the body is slain." },
+  { ch:2, v:22, ref:"2.22", sa:"वासांसि जीर्णानि यथा विहाय नवानि गृह्णाति नरोऽपराणि।\nतथा शरीराणि विहाय जीर्णान्यन्यानि संयाति नवानि देही।।", trans:"vasansi jirnani yatha vihaya navani grihnati naro'parani | tatha sharirani vihaya jirnany anyani samyati navani dehi", meaning:"As a person puts on new garments, giving up old ones, similarly the soul accepts new material bodies, giving up the old and useless ones." },
+  { ch:2, v:23, ref:"2.23", sa:"नैनं छिन्दन्ति शस्त्राणि नैनं दहति पावकः।\nन चैनं क्लेदयन्त्यापो न शोषयति मारुतः।।", trans:"nainam chhindanti shastrani nainam dahati pavakah | na chainam kledayanty apo na shoshayati marutah", meaning:"The soul can never be cut by any weapon, nor burned by fire, nor moistened by water, nor dried by the wind." },
+  { ch:2, v:40, ref:"2.40", sa:"नेहाभिक्रमनाशोऽस्ति प्रत्यवायो न विद्यते।\nस्वल्पमप्यस्य धर्मस्य त्रायते महतो भयात्।।", trans:"nehabhikrama-nasho'sti pratyavayo na vidyate | svalpam apy asya dharmasya trayate mahato bhayat", meaning:"In this path of karma yoga, no effort is ever lost, and there is no harm. Even a little practice of this discipline delivers a person from the great fear of repeated birth and death." },
+  { ch:2, v:47, ref:"2.47", sa:"कर्मण्येवाधिकारस्ते मा फलेषु कदाचन।\nमा कर्मफलहेतुर्भूर्मा ते सङ्गोऽस्त्वकर्मणि।।", trans:"karmany evadhikaras te ma phaleshu kadachana | ma karma-phala-hetur bhur ma te sango'stv akarmani", meaning:"You have a right to perform your prescribed duties, but you are not entitled to the fruits of your actions. Never consider yourself the cause of the results of your activities, nor be attached to inaction." },
+  { ch:2, v:48, ref:"2.48", sa:"योगस्थः कुरु कर्माणि सङ्गं त्यक्त्वा धनंजय।\nसिद्ध्यसिद्ध्योः समो भूत्वा समत्वं योग उच्यते।।", trans:"yoga-sthah kuru karmani sangam tyaktva dhananjaya | siddhy-asiddhyoh samo bhutva samatvam yoga uchyate", meaning:"O Arjuna, perform your duty equi-poised, abandoning all attachment to success or failure. Such equanimity of mind is called yoga." },
+  { ch:2, v:55, ref:"2.55", sa:"प्रजहाति यदा कामान्सर्वान्पार्थ मनोगतान्।\nआत्मन्येवात्मना तुष्टः स्थितप्रज्ञस्तदोच्यते।।", trans:"prajahati yada kaman sarvan partha manogatan | atmanyevatmana tushtah sthita-prajnas tadochyate", meaning:"O Partha, when a person completely casts off all desires of the mind, and is satisfied in the Self by the Self, then they are called one of steady wisdom." },
+  // CHAPTER 3
+  { ch:3, v:16, ref:"3.16", sa:"एवं प्रवर्तितं चक्रं नानुवर्तयतीह यः।\nअघायुरिन्द्रियारामो मोघं पार्थ स जीवति।।", trans:"evam pravartitam chakram nanuvartayatiha yah | aghayur indriyaramo mogham partha sa jivati", meaning:"O Partha, one who does not follow the wheel of creation thus set in motion — who leads a sinful life rejoicing in the senses — that person lives in vain." },
+  { ch:3, v:21, ref:"3.21", sa:"यद्यदाचरति श्रेष्ठस्तत्तदेवेतरो जनः।\nस यत्प्रमाणं कुरुते लोकस्तदनुवर्तते।।", trans:"yad yad acharati shreshtas tat tad evetaro janah | sa yat pramanam kurute lokas tad anuvartate", meaning:"Whatever actions the great persons perform, common people follow. Whatever standards they set, all the world pursues." },
+  { ch:3, v:27, ref:"3.27", sa:"प्रकृतेः क्रियमाणानि गुणैः कर्माणि सर्वशः।\nअहङ्कारविमूढात्मा कर्ताहमिति मन्यते।।", trans:"prakriteh kriyamanani gunaih karmani sarvashah | ahankara-vimudhātmā kartāham iti manyate", meaning:"All activities are carried out by the modes of material nature. But the fool who is deluded by false ego thinks himself to be the doer." },
+  { ch:3, v:37, ref:"3.37", sa:"श्री भगवानुवाच\nकाम एष क्रोध एष रजोगुणसमुद्भवः।\nमहाशनो महापाप्मा विद्ध्येनमिह वैरिणम्।।", trans:"kama esha krodha esha rajo-guna-samudbhavah | mahasano maha-papma viddhy enam iha vairinam", meaning:"The Blessed Lord said: It is lust, it is anger, born of the mode of passion — all-consuming and most sinful. Know this as the enemy in this world." },
+  // CHAPTER 4
+  { ch:4, v:7, ref:"4.7", sa:"यदा यदा हि धर्मस्य ग्लानिर्भवति भारत।\nअभ्युत्थानमधर्मस्य तदात्मानं सृजाम्यहम्।।", trans:"yada yada hi dharmasya glanir bhavati bharata | abhyutthanam adharmasya tadatmanam srijamy aham", meaning:"Whenever and wherever there is a decline of righteousness, O descendant of Bharata, and a predominant rise of unrighteousness — at that time I manifest Myself." },
+  { ch:4, v:8, ref:"4.8", sa:"परित्राणाय साधूनां विनाशाय च दुष्कृताम्।\nधर्मसंस्थापनार्थाय सम्भवामि युगे युगे।।", trans:"paritranaya sadhunam vinashaya cha dushkritam | dharma-samsthapanarthaya sambhavami yuge yuge", meaning:"To deliver the pious and to annihilate the miscreants, as well as to reestablish the principles of dharma, I Myself appear millennium after millennium." },
+  { ch:4, v:9, ref:"4.9", sa:"जन्म कर्म च मे दिव्यमेवं यो वेत्ति तत्त्वतः।\nत्यक्त्वा देहं पुनर्जन्म नैति मामेति सोऽर्जुन।।", trans:"janma karma cha me divyam evam yo vetti tattvatah | tyaktva deham punar janma naiti mam eti so'rjuna", meaning:"One who knows in truth the transcendental nature of My appearance and activities does not, upon leaving the body, take birth again in this material world, but attains My eternal abode, O Arjuna." },
+  { ch:4, v:24, ref:"4.24", sa:"ब्रह्मार्पणं ब्रह्म हविर्ब्रह्माग्नौ ब्रह्मणा हुतम्।\nब्रह्मैव तेन गन्तव्यं ब्रह्मकर्मसमाधिना।।", trans:"brahmarpanam brahma havir brahmagnau brahmana hutam | brahmaiva tena gantavyam brahma-karma-samadhina", meaning:"Brahman is the ritual, Brahman is the offering, Brahman is the one who offers into the fire of Brahman. Brahman is that which is to be attained by one who always sees Brahman in action." },
+  { ch:4, v:34, ref:"4.34", sa:"तद्विद्धि प्रणिपातेन परिप्रश्नेन सेवया।\nउपदेक्ष्यन्ति ते ज्ञानं ज्ञानिनस्तत्त्वदर्शिनः।।", trans:"tad viddhi pranipatena pariprashnena sevaya | upadekshyanti te jnanam jnaninas tattva-darshinah", meaning:"Just try to learn the truth by approaching a spiritual master. Inquire from him submissively and render service to him. The self-realized soul can impart knowledge unto you because he has seen the truth." },
+  { ch:4, v:38, ref:"4.38", sa:"न हि ज्ञानेन सदृशं पवित्रमिह विद्यते।\nतत्स्वयं योगसंसिद्धः कालेनात्मनि विन्दति।।", trans:"na hi jnanena sadrisham pavitram iha vidyate | tat svayam yoga-samsiddhah kalenatmani vindati", meaning:"In this world, there is nothing as purifying as transcendental knowledge. Such knowledge is the mature fruit of all mysticism. And one who has become accomplished in the practice of devotional service enjoys this knowledge within himself in due course of time." },
+  // CHAPTER 5
+  { ch:5, v:18, ref:"5.18", sa:"विद्याविनयसम्पन्ने ब्राह्मणे गवि हस्तिनि।\nशुनि चैव श्वपाके च पण्डिताः समदर्शिनः।।", trans:"vidya-vinaya-sampanne brahmane gavi hastini | shuni chaiva shvapake cha panditah sama-darshinah", meaning:"The humble sages, by virtue of true knowledge, see with equal vision a learned and gentle brāhmaṇa, a cow, an elephant, a dog, and a dog-eater." },
+  { ch:5, v:22, ref:"5.22", sa:"ये हि संस्पर्शजा भोगा दुःखयोनय एव ते।\nआद्यन्तवन्तः कौन्तेय न तेषु रमते बुधः।।", trans:"ye hi samsparshaja bhoga duhkha-yonaya eva te | adyantavantah kaunteya na teshu ramate budhah", meaning:"An intelligent man does not take part in the sources of misery, which are due to contact with the material senses. O son of Kunti, such pleasures have a beginning and an end, and so the wise man does not delight in them." },
+  // CHAPTER 6
+  { ch:6, v:5, ref:"6.5", sa:"उद्धरेदात्मनात्मानं नात्मानमवसादयेत्।\nआत्मैव ह्यात्मनो बन्धुरात्मैव रिपुरात्मनः।।", trans:"uddhared atmanatmanam natmanam avasadayet | atmaiva hy atmano bandhur atmaiva ripur atmanah", meaning:"One must deliver himself with the help of his mind, and not degrade himself. The mind is the friend of the conditioned soul, and his enemy as well." },
+  { ch:6, v:6, ref:"6.6", sa:"बन्धुरात्मात्मनस्तस्य येनात्मैवात्मना जितः।\nअनात्मनस्तु शत्रुत्वे वर्तेतात्मैव शत्रुवत्।।", trans:"bandhur atmatmanas tasya yenatmaiva tmanajitah | anatmanas tu shatrutve vartetatmaiva shatruvat", meaning:"For one who has conquered the mind, the mind is the best of friends; but for one who has failed to do so, the mind will remain the greatest enemy." },
+  { ch:6, v:17, ref:"6.17", sa:"युक्ताहारविहारस्य युक्तचेष्टस्य कर्मसु।\nयुक्तस्वप्नावबोधस्य योगो भवति दुःखहा।।", trans:"yuktatara-viharasya yukta-ceshtasya karmasu | yukta-svapnavabodhasya yogo bhavati duhkha-ha", meaning:"He who is moderate in eating, sleeping, recreation, and working can mitigate all sorrows by practicing the yoga system." },
+  { ch:6, v:35, ref:"6.35", sa:"श्री भगवानुवाच\nअसंशयं महाबाहो मनो दुर्निग्रहं चलम्।\nअभ्यासेन तु कौन्तेय वैराग्येण च गृह्यते।।", trans:"asanshayam mahabaho mano durnigraham chalam | abhyasena tu kaunteya vairagyena cha grhyate", meaning:"O mighty-armed son of Kunti, it is undoubtedly very difficult to curb the restless mind, but it is possible by suitable practice and by detachment." },
+  { ch:6, v:40, ref:"6.40", sa:"श्री भगवानुवाच\nपार्थ नैवेह नामुत्र विनाशस्तस्य विद्यते।\nन हि कल्याणकृत्कश्चिद् दुर्गतिं तात गच्छति।।", trans:"partha naiveha namutra vinashas tasya vidyate | na hi kalyane-krit kashchid durgatim tata gacchati", meaning:"The Supreme Lord said: O Partha, one who does good deeds is never overcome by evil — neither in this world nor in the next. One who does good, My friend, is never overcome by evil." },
+  // CHAPTER 7
+  { ch:7, v:7, ref:"7.7", sa:"मत्तः परतरं नान्यत्किञ्चिदस्ति धनंजय।\nमयि सर्वमिदं प्रोतं सूत्रे मणिगणा इव।।", trans:"mattah parataram nanyat kinchid asti dhananjaya | mayi sarvam idam protam sutre mani-gana iva", meaning:"O conqueror of wealth, there is no truth superior to Me. Everything rests upon Me, as pearls are strung on a thread." },
+  { ch:7, v:14, ref:"7.14", sa:"दैवी ह्येषा गुणमयी मम माया दुरत्यया।\nमामेव ये प्रपद्यन्ते मायामेतां तरन्ति ते।।", trans:"daivi hy esha gunamayi mama maya duratyaya | mam eva ye prapadyante mayam etam taranti te", meaning:"This divine energy of Mine, consisting of the three modes of material nature, is difficult to overcome. But those who have surrendered unto Me can easily cross beyond it." },
+  { ch:7, v:16, ref:"7.16", sa:"चतुर्विधा भजन्ते मां जनाः सुकृतिनोऽर्जुन।\nआर्तो जिज्ञासुरर्थार्थी ज्ञानी च भरतर्षभ।।", trans:"chatur-vidha bhajante mam janah sukritino'rjuna | arto jijnasur artharthi jnani cha bharatarshabha", meaning:"O best of the Bharatas, four kinds of pious people render devotional service unto Me — the distressed, the desirer of wealth, the inquisitive, and he who is searching for knowledge of the Absolute." },
+  // CHAPTER 8
+  { ch:8, v:5, ref:"8.5", sa:"अन्तकाले च मामेव स्मरन्मुक्त्वा कलेवरम्।\nयः प्रयाति स मद्भावं याति नास्त्यत्र संशयः।।", trans:"anta-kale cha mam eva smaran muktva kalevaram | yah prayati sa mad-bhavam yati nasty atra sanshayah", meaning:"And whoever, at the time of death, gives up the body remembering Me alone, reaches My state. Of this there is no doubt." },
+  { ch:8, v:7, ref:"8.7", sa:"तस्मात्सर्वेषु कालेषु मामनुस्मर युध्य च।\nमय्यर्पितमनोबुद्धिर्मामेवैष्यस्यसंशयः।।", trans:"tasmat sarveshu kaleshu mam anusmara yudhya cha | mayy arpita-mano-buddhir mam evaishhyasy asanshayah", meaning:"Therefore, O Arjuna, you should always think of Me and at the same time carry out your duty of fighting. With your activities dedicated to Me and your mind and intelligence fixed on Me, you will attain Me without doubt." },
+  // CHAPTER 9
+  { ch:9, v:22, ref:"9.22", sa:"अनन्याश्चिन्तयन्तो मां ये जनाः पर्युपासते।\nतेषां नित्याभियुक्तानां योगक्षेमं वहाम्यहम्।।", trans:"ananya-ash chintayanto mam ye janah paryupasate | tesham nitya-abhiyuktanam yoga-kshemam vahamy aham", meaning:"But those who worship Me with devotion, meditating on My transcendental form — to them, who are ever devoted and single-minded, I carry what they lack and preserve what they have." },
+  { ch:9, v:26, ref:"9.26", sa:"पत्रं पुष्पं फलं तोयं यो मे भक्त्या प्रयच्छति।\nतदहं भक्त्युपहृतमश्नामि प्रयतात्मनः।।", trans:"patram pushpam phalam toyam yo me bhaktya prayacchati | tad aham bhaktyupahritam ashnami prayatatmanah", meaning:"If one offers Me with love and devotion a leaf, a flower, a fruit, or water, I will accept it. Even the smallest gift offered with a pure heart is accepted by Me." },
+  { ch:9, v:27, ref:"9.27", sa:"यत्करोषि यदश्नासि यज्जुहोषि ददासि यत्।\nयत्तपस्यसि कौन्तेय तत्कुरुष्व मदर्पणम्।।", trans:"yat karoshi yad ashnasi yaj juhoshi dadasi yat | yat tapasyasi kaunteya tat kurushhva mad-arpanam", meaning:"O son of Kunti, all that you do, all that you eat, all that you offer and give away, as well as all austerities that you may perform — do that as an offering unto Me." },
+  { ch:9, v:30, ref:"9.30", sa:"अपि चेत्सुदुराचारो भजते मामनन्यभाक्।\nसाधुरेव स मन्तव्यः सम्यग्व्यवसितो हि सः।।", trans:"api chet su-duracharoo bhajate mam ananya-bhak | sadhur eva sa mantavyah samyag vyavasito hi sah", meaning:"Even if a person of the most vile conduct worships Me with devotion and without deviation, he is to be considered a saint, for he has properly resolved." },
+  // CHAPTER 10
+  { ch:10, v:20, ref:"10.20", sa:"अहमात्मा गुडाकेश सर्वभूताशयस्थितः।\nअहमादिश्च मध्यं च भूतानामन्त एव च।।", trans:"aham atma gudakesha sarva-bhutashaya-sthitah | aham adis cha madhyam cha bhutanam anta eva cha", meaning:"I am the Self, O Arjuna, seated in the hearts of all beings. I am the beginning, middle, and end of all beings." },
+  { ch:10, v:32, ref:"10.32", sa:"सर्गाणामादिरन्तश्च मध्यं चैवाहमर्जुन।\nअध्यात्मविद्या विद्यानां वादः प्रवदतामहम्।।", trans:"sarganam adir antas cha madhyam chaivam aham arjuna | adhyatma-vidya vidyanam vadah pravadatam aham", meaning:"Of all creations I am the beginning and the end and also the middle, O Arjuna. Of all sciences I am the science of the self, and among logicians I am the conclusive truth." },
+  { ch:10, v:39, ref:"10.39", sa:"यच्चापि सर्वभूतानां बीजं तदहमर्जुन।\nन तदस्ति विना यत्स्यान्मया भूतं चराचरम्।।", trans:"yach chapi sarva-bhutanam bijam tad aham arjuna | na tad asti vina yat syan maya bhutam chara-acharam", meaning:"Furthermore, O Arjuna, I am the generating seed of all existences. There is no being, moving or unmoving, that can exist without Me." },
+  // CHAPTER 11
+  { ch:11, v:7, ref:"11.7", sa:"इहैकस्थं जगत्कृत्स्नं पश्याद्य सचराचरम्।\nमम देहे गुडाकेश यच्चान्यद्द्रष्टुमिच्छसि।।", trans:"ihaika-stham jagat kritsnam pashyadya sa-chara-acharam | mama dehe gudakesha yach chanyad drashhtum ichhasi", meaning:"O Arjuna, behold now the entire universe with all moving and unmoving beings, all in one place here in My body, and whatever else you wish to see." },
+  { ch:11, v:33, ref:"11.33", sa:"तस्मात्त्वमुत्तिष्ठ यशो लभस्व जित्वा शत्रून् भुङ्क्ष्व राज्यं समृद्धम्।\nमयैवैते निहताः पूर्वमेव निमित्तमात्रं भव सव्यसाचिन्।।", trans:"tasmat tvam uttishtha yasho labhasva jitva shatrun bhunkshhva rajyam samriddham | mayaivaite nihatah purvam eva nimittamatram bhava savyasachin", meaning:"Therefore arise! Win glory! Defeat your enemies and enjoy a prosperous kingdom. These warriors have already been destroyed by My arrangement, and you, O Savyasachi, can be but an instrument in the fight." },
+  { ch:11, v:47, ref:"11.47", sa:"श्री भगवानुवाच\nमया प्रसन्नेन तवार्जुनेदं रूपं परं दर्शितमात्मयोगात्।\nतेजोमयं विश्वमनन्तमाद्यं यन्मे त्वदन्येन न दृष्टपूर्वम्।।", trans:"maya prasannena tavarjunedam rupam param darshitam atma-yogat | tejo-mayam vishvam anantam adyam yan me tvad-anyena na drishtapurvam", meaning:"O Arjuna, out of My grace I have shown you this supreme, brilliant, universal, infinite, and primeval form, which no one else before you has ever seen." },
+  // CHAPTER 12
+  { ch:12, v:2, ref:"12.2", sa:"श्री भगवानुवाच\nमय्यावेश्य मनो ये मां नित्ययुक्ता उपासते।\nश्रद्धया परयोपेताः ते मे युक्ततमा मताः।।", trans:"mayy aveshya mano ye mam nitya-yukta upasate | shraddhaya parayo-petas te me yuktatama matah", meaning:"The Blessed Lord said: Those who fix their minds on My personal form and are always engaged in worshipping Me with great and transcendental faith are considered by Me to be most perfect." },
+  { ch:12, v:13, ref:"12.13", sa:"अद्वेष्टा सर्वभूतानां मैत्रः करुण एव च।\nनिर्ममो निरहङ्कारः समदुःखसुखः क्षमी।।", trans:"adveshtā sarva-bhutanam maitrah karuna eva cha | nirmamo nirahamkarah sama-duhkha-sukhah ksami", meaning:"One who is not envious but is a kind friend to all living entities, who does not think himself a proprietor and is free from false ego, who is equal in both happiness and distress, who is ever forgiving." },
+  { ch:12, v:15, ref:"12.15", sa:"यस्मान्नोद्विजते लोको लोकान्नोद्विजते च यः।\nहर्षामर्षभयोद्वेगैर्मुक्तो यः स च मे प्रियः।।", trans:"yasmat nodvijate loko lokan nodvijate cha yah | harsha-marsha-bhayo-dvegair mukto yah sa cha me priyah", meaning:"He by whom the world is not put into difficulty and who is not disturbed by the world, who is unaffected by joy, envy, fear, and anxiety — he is very dear to Me." },
+  // CHAPTER 13
+  { ch:13, v:2, ref:"13.2", sa:"श्री भगवानुवाच\nइदं शरीरं कौन्तेय क्षेत्रमित्यभिधीयते।\nएतद्यो वेत्ति तं प्राहुः क्षेत्रज्ञ इति तद्विदः।।", trans:"idam shariram kaunteya kshetram ity abhidhiyate | etad yo vetti tam prahuh kshetra-jna iti tad-vidah", meaning:"This body, O son of Kunti, is called the field, and one who knows this body is called the knower of the field by the wise." },
+  { ch:13, v:13, ref:"13.13", sa:"ज्ञेयं यत्तत्प्रवक्ष्यामि यज्ज्ञात्वामृतमश्नुते।\nअनादिमत्परं ब्रह्म न सत्तन्नासदुच्यते।।", trans:"jneyam yat tat pravakshyami yaj jnatvamrtam ashnute | anadi mat-param brahma na sat tan nasad uchyate", meaning:"I shall now explain the knowable — knowing which one can taste the immortal. The Supreme Brahman, which has no beginning, is said to be neither existent nor nonexistent." },
+  { ch:13, v:28, ref:"13.28", sa:"समं सर्वेषु भूतेषु तिष्ठन्तं परमेश्वरम्।\nविनश्यत्स्वविनश्यन्तं यः पश्यति स पश्यति।।", trans:"samam sarveshu bhuteshu tishthantam parameshvaram | vinashyatsv avinashyantam yah pashyati sa pashyati", meaning:"One who sees the Supreme Lord equally present in all living entities, the imperishable within the perishable — that person truly sees." },
+  // CHAPTER 14
+  { ch:14, v:5, ref:"14.5", sa:"सत्त्वं रजस्तम इति गुणाः प्रकृतिसम्भवाः।\nनिबध्नन्ति महाबाहो देहे देहिनमव्ययम्।।", trans:"sattvam rajas tama iti gunah prakriti-sambhavah | nibadhnanti maha-baho dehe dehinam avyayam", meaning:"Material nature consists of three modes — goodness, passion, and ignorance. When the eternal living entity comes in contact with nature, O mighty-armed Arjuna, it becomes conditioned by these modes." },
+  { ch:14, v:20, ref:"14.20", sa:"गुणानेतानतीत्य त्रीन्देही देहसमुद्भवान्।\nजन्ममृत्युजरादुःखैर्विमुक्तोऽमृतमश्नुते।।", trans:"gunan etan atitya trin dehi deha-samudbhavan | janma-mrityu-jara-duhkhair vimukto'mritam ashnute", meaning:"When the embodied soul transcends these three qualities associated with the material body, he is freed from birth, death, old age, and their distresses and can enjoy nectar even in this life." },
+  // CHAPTER 15
+  { ch:15, v:1, ref:"15.1", sa:"श्री भगवानुवाच\nऊर्ध्वमूलमधःशाखमश्वत्थं प्राहुरव्ययम्।\nछन्दांसि यस्य पर्णानि यस्तं वेद स वेदवित्।।", trans:"urdhva-mulam adhah-shakham ashvattham prahur avyayam | chchandasimsi yasya parnani yas tam veda sa vedavit", meaning:"The Blessed Lord said: There is a banyan tree which has its roots upward and its branches down, and the Vedic hymns are its leaves. One who knows this tree is the knower of the Vedas." },
+  { ch:15, v:15, ref:"15.15", sa:"सर्वस्य चाहं हृदि संनिविष्टो मत्तः स्मृतिर्ज्ञानमपोहनं च।\nवेदैश्च सर्वैरहमेव वेद्यो वेदान्तकृद्वेदविदेव चाहम्।।", trans:"sarvasya chaham hridi sannivishtho mattah smritir jnanam apohanam cha | vedais cha sarvair aham eva vedyo vedanta-krid veda-vid eva chaham", meaning:"I am seated in everyone's heart, and from Me come remembrance, knowledge, and forgetfulness. By all the Vedas am I to be known; indeed I am the compiler of Vedanta, and I am the knower of the Vedas." },
+  { ch:15, v:19, ref:"15.19", sa:"यो मामेवमसम्मूढो जानाति पुरुषोत्तमम्।\nस सर्वविद्भजति मां सर्वभावेन भारत।।", trans:"yo mam evam asammudho janati purushottamam | sa sarva-vid bhajati mam sarva-bhavena bharata", meaning:"Whoever knows Me as the Supreme Person, O Arjuna, without doubting, is the knower of everything. He therefore engages himself in full devotional service to Me, O Bharata." },
+  // CHAPTER 16
+  { ch:16, v:1, ref:"16.1", sa:"श्री भगवानुवाच\nअभयं सत्त्वसंशुद्धिर्ज्ञानयोगव्यवस्थितिः।\nदानं दमश्च यज्ञश्च स्वाध्यायस्तप आर्जवम्।।", trans:"abhayam sattva-samshuddhi jnana-yoga-vyavasthitih | danam damas cha yajnas cha svadhyayas tapa arjavam", meaning:"The Supreme Personality of Godhead said: Fearlessness; purification of one's existence; cultivation of spiritual knowledge; charity; self-control; performance of sacrifice; study of the Vedas; austerity; simplicity." },
+  { ch:16, v:21, ref:"16.21", sa:"त्रिविधं नरकस्येदं द्वारं नाशनमात्मनः।\nकामः क्रोधस्तथा लोभस्तस्मादेतत्त्रयं त्यजेत्।।", trans:"tri-vidham narakasyedam dvaram nashanam atmanah | kamah krodhas tatha lobhas tasmad etat trayam tyajet", meaning:"There are three gates leading to this hell — lust, anger, and greed. Every sane man should give these up, for they lead to the degradation of the soul." },
+  // CHAPTER 17
+  { ch:17, v:3, ref:"17.3", sa:"सत्त्वानुरूपा सर्वस्य श्रद्धा भवति भारत।\nश्रद्धामयोऽयं पुरुषो यो यच्छ्रद्धः स एव सः।।", trans:"sattvanurupas sarvasya shraddha bhavati bharata | shraddha-mayo'yam purusho yo yach-shraddhah sa eva sah", meaning:"O Arjuna, the faith of each person is in accordance with his mode of existence. The living being is made of faith; as his faith is, so is he." },
+  { ch:17, v:23, ref:"17.23", sa:"ॐ तत्सदिति निर्देशो ब्रह्मणस्त्रिविधः स्मृतः।\nब्राह्मणास्तेन वेदाश्च यज्ञाश्च विहिताः पुरा।।", trans:"om tat sad iti nirdesh brahmanas tri-vidhah smritah | brahmanastena vedas cha yajnas cha vihitah pura", meaning:"From the beginning of creation, the three words OM TAT SAT have been used to indicate the Supreme Absolute Truth. These three symbolic representations were used by brahmanas while chanting Vedic hymns and during sacrifices for the satisfaction of the Supreme." },
+  // CHAPTER 18
+  { ch:18, v:20, ref:"18.20", sa:"सर्वभूतेषु येनैकं भावमव्ययमीक्षते।\nअविभक्तं विभक्तेषु तज्ज्ञानं विद्धि सात्त्विकम्।।", trans:"sarva-bhuteshu yenaikan bhavam avyayam ikshate | avibhaktam vibhakteshu taj jnanam viddhi sattvikam", meaning:"That knowledge by which one undivided spiritual nature is seen in all existences — undivided in the divided — such knowledge belongs to the mode of goodness." },
+  { ch:18, v:45, ref:"18.45", sa:"स्वे स्वे कर्मण्यभिरतः संसिद्धिं लभते नरः।\nस्वकर्मनिरतः सिद्धिं यथा विन्दति तच्छृणु।।", trans:"sve sve karmany abhiratah samsiddhim labhate narah | sva-karma-niratah siddhim yatha vindati tac chhrnnu", meaning:"By following his qualities of work, every man can become perfect. Now please hear from Me how this can be done." },
+  { ch:18, v:55, ref:"18.55", sa:"भक्त्या मामभिजानाति यावान्यश्चास्मि तत्त्वतः।\nततो मां तत्त्वतो ज्ञात्वा विशते तदनन्तरम्।।", trans:"bhaktya mam abhijanati yavan yas chasmi tattvatah | tato mam tattvatau jnatva vishate tad-anantaram", meaning:"One can understand Me as I am, as the Supreme Personality of Godhead, only by devotional service. And when one is in full consciousness of Me by such devotion, he can enter into the kingdom of God." },
+  { ch:18, v:61, ref:"18.61", sa:"ईश्वरः सर्वभूतानां हृद्देशेऽर्जुन तिष्ठति।\nभ्रामयन्सर्वभूतानि यन्त्रारूढानि मायया।।", trans:"ishvarah sarva-bhutanam hrid-deshe'rjuna tishthati | bhraman sarva-bhutani yantrarudha ni mayayā", meaning:"The Supreme Lord is situated in everyone's heart, O Arjuna, and is directing the wanderings of all living entities, who are seated as on a machine made of the material energy." },
+  { ch:18, v:63, ref:"18.63", sa:"इति ते ज्ञानमाख्यातं गुह्याद्गुह्यतरं मया।\nविमृश्यैतदशेषेण यथेच्छसि तथा कुरु।।", trans:"iti te jnanam akhyatam guhyad guhyataram maya | vimrishyaitad asheshena yathechhasi tatha kuru", meaning:"Thus I have explained to you knowledge still more confidential. Deliberate on this fully, and then do what you wish to do." },
+  { ch:18, v:65, ref:"18.65", sa:"मन्मना भव मद्भक्तो मद्याजी मां नमस्कुरु।\nमामेवैष्यसि सत्यं ते प्रतिजाने प्रियोऽसि मे।।", trans:"man-mana bhava mad-bhakto mad-yaji mam namaskuru | mam evaishhyasi satyam te pratijane priyo'si me", meaning:"Always think of Me, become My devotee, worship Me, and offer your homage unto Me. Thus you will come to Me without fail. I promise you this because you are My very dear friend." },
+  { ch:18, v:66, ref:"18.66", sa:"सर्वधर्मान्परित्यज्य मामेकं शरणं व्रज।\nअहं त्वां सर्वपापेभ्यो मोक्षयिष्यामि मा शुचः।।", trans:"sarva-dharman parityajya mam ekam sharanam vraja | aham tvam sarva-papebhyo mokshayishyami ma shuchah", meaning:"Abandon all varieties of dharma and just surrender unto Me. I shall deliver you from all sinful reactions. Do not fear." },
+  { ch:18, v:78, ref:"18.78", sa:"यत्र योगेश्वरः कृष्णो यत्र पार्थो धनुर्धरः।\nतत्र श्रीर्विजयो भूतिर्ध्रुवा नीतिर्मतिर्मम।।", trans:"yatra yogeshvarah krishno yatra partho dhanur-dharah | tatra shrir vijayo bhutir dhruva nitir matir mama", meaning:"Wherever there is Krishna, the master of all mystics, and wherever there is Arjuna, the supreme archer, there will also certainly be opulence, victory, extraordinary power, and morality. That is my opinion." }
+];
+
+// ════════════════════════════════════════
+//  QUIZ DATA
+// ════════════════════════════════════════
+const QUIZ_QUESTIONS = [
+  { q_sa:"कर्मण्येवाधिकारस्ते मा फलेषु कदाचन", q_en:"You have the right to perform your duties, but not to the...", options:["Results", "Actions", "Body", "Mind"], correct:0, explanation:"Chapter 2.47 — The most famous verse of the Gita: You have the right to work, but never to the fruit of work. Act without attachment to results." },
+  { q_sa:"यदा यदा हि धर्मस्य ग्लानिर्भवति भारत", q_en:"Whenever there is a decline of righteousness, Krishna says He will...", options:["Manifest Himself", "Send a messenger", "End the world", "Test humanity"], correct:0, explanation:"Chapter 4.7 — The avatara (divine incarnation) verse. Krishna promises to incarnate whenever dharma declines." },
+  { q_sa:"न जायते म्रियते वा कदाचित्", q_en:"According to this verse, the soul...", options:["Never born, never dies", "Is born once and dies once", "Takes 7 births", "Is part of the sun"], correct:0, explanation:"Chapter 2.20 — The Atman is eternal, unborn, undying, and primeval." },
+  { q_sa:"सर्वधर्मान्परित्यज्य मामेकं शरणं व्रज", q_en:"The 'Supreme Secret' verse (18.66) instructs Arjuna to...", options:["Surrender to Krishna alone", "Follow all religions", "Fight with weapons", "Renounce and go to forest"], correct:0, explanation:"Chapter 18.66 — The charama shloka (final teaching): Abandon all dharmas and take exclusive refuge in the Lord." },
+  { q_sa:"वासांसि जीर्णानि यथा विहाय", q_en:"Krishna compares the soul changing bodies to...", options:["Changing old garments", "Water changing form", "Sun rising and setting", "Seasons changing"], correct:0, explanation:"Chapter 2.22 — Just as a person puts on new garments giving up old ones, the soul accepts new bodies." },
+  { q_sa:"उद्धरेदात्मनात्मानं नात्मानमवसादयेत्", q_en:"According to Chapter 6.5, who is both the friend and enemy of the self?", options:["The mind itself", "Other people", "Past karma", "The body"], correct:0, explanation:"Chapter 6.5-6 — The mind is the friend of one who has conquered it, and the enemy of one who has not." },
+  { q_sa:"त्रिविधं नरकस्येदं द्वारं नाशनमात्मनः", q_en:"The three gates to hell described in Chapter 16 are...", options:["Lust, Anger, Greed", "Fear, Envy, Hate", "Doubt, Pride, Sloth", "War, Lies, Theft"], correct:0, explanation:"Chapter 16.21 — Kama (lust), Krodha (anger), and Lobha (greed) are the triple gates to self-destruction." },
+  { q_sa:"पत्रं पुष्पं फलं तोयं यो मे भक्त्या प्रयच्छति", q_en:"In Chapter 9.26, Krishna says He will accept from a devotee...", options:["A leaf, flower, fruit or water", "Gold and jewels", "Elaborate rituals only", "Great sacrifices only"], correct:0, explanation:"Chapter 9.26 — Even the most simple offering given with pure love and devotion is accepted by the Lord." },
+  { q_sa:"सत्त्वं रजस्तम इति गुणाः प्रकृतिसम्भवाः", q_en:"The three gunas (modes) of material nature are...", options:["Sattva, Rajas, Tamas", "Dharma, Artha, Kama", "Jnana, Bhakti, Karma", "Om, Tat, Sat"], correct:0, explanation:"Chapter 14.5 — Sattva (goodness), Rajas (passion), and Tamas (ignorance) are the three modes of material nature." },
+  { q_sa:"मन्मना भव मद्भक्तो मद्याजी मां नमस्कुरु", q_en:"In the penultimate secret (18.65), Krishna says: 'Think of Me, be My devotee, worship Me, and...'", options:["Offer your homage unto Me", "Fight your enemies", "Study the scriptures", "Renounce the world"], correct:0, explanation:"Chapter 18.65 — Think of Me, be My devotee, worship Me, offer homage to Me — you will come to Me without fail." },
+  { q_sa:"यद्यदाचरति श्रेष्ठस्तत्तदेवेतरो जनः", q_en:"Chapter 3.21 says that whatever a great person does...", options:["Common people follow", "Angels record", "God rewards", "Nature opposes"], correct:0, explanation:"Chapter 3.21 — Whatever actions the great ones perform, ordinary people follow. A leader's conduct sets the standard for society." },
+  { q_sa:"अनन्याश्चिन्तयन्तो मां ये जनाः पर्युपासते", q_en:"In Chapter 9.22, Krishna promises that for those who worship Him single-mindedly, He will...", options:["Carry what they lack and preserve what they have", "Grant them wealth", "Give them armies", "Make them rulers"], correct:0, explanation:"Chapter 9.22 — To those devoted exclusively to Him, Krishna Himself carries their burdens and secures their welfare." }
+];
+
+// ════════════════════════════════════════
+//  MANTRAS
+// ════════════════════════════════════════
+const MANTRAS = [
+  { sa:"ॐ नमो भगवते वासुदेवाय", en:"Om, salutations to the Lord who dwells in all beings" },
+  { sa:"हरे कृष्ण हरे कृष्ण कृष्ण कृष्ण हरे हरे", en:"Hare Krishna — calling upon the divine energy and the Lord" },
+  { sa:"ॐ नमः शिवाय", en:"Om, I bow to Shiva, the auspicious one" },
+  { sa:"ॐ श्री रामाय नमः", en:"Om, salutations to the auspicious Lord Rama" },
+  { sa:"ॐ गं गणपतये नमः", en:"Om, salutations to Lord Ganesha, remover of obstacles" },
+  { sa:"ॐ", en:"The primordial sound — the vibration of all existence" },
+  { sa:"सोऽहम्", en:"I am That — the affirmation of oneness with the Absolute" },
+  { sa:"तत् त्वम् असि", en:"Thou art That — the great Upanishadic mahavakya" }
+];
+
+// ════════════════════════════════════════
+//  PHILOSOPHY DATA
+// ════════════════════════════════════════
+const PHILOSOPHY = [
+  { icon:"⚡", title:"Karma Yoga", sa:"कर्म योग", text:"The path of selfless action — performing all duties without attachment to results. Act in the world fully, but let the fruits belong to the Divine." },
+  { icon:"🔥", title:"Jnana Yoga", sa:"ज्ञान योग", text:"The path of knowledge and discrimination — understanding the distinction between the eternal Self (Atman) and the temporary material world (Maya)." },
+  { icon:"🙏", title:"Bhakti Yoga", sa:"भक्ति योग", text:"The path of devotion — complete loving surrender to the Supreme Person, held by Krishna to be the highest and most accessible of all paths." },
+  { icon:"🧘", title:"Dhyana Yoga", sa:"ध्यान योग", text:"The path of meditation — stilling the restless mind through regular practice, establishing oneself in unwavering inner stillness and Self-awareness." },
+  { icon:"🌸", title:"The Eternal Atman", sa:"आत्मा", text:"The soul is unborn, eternal, never ceasing to exist, primeval. It is not slain when the body is slain. Knowing this, do not grieve." },
+  { icon:"🌊", title:"Nishkama Karma", sa:"निष्काम कर्म", text:"Action performed without desire for personal gain — the key to breaking the cycle of karma and attaining liberation while still active in the world." },
+  { icon:"🌅", title:"Surrender (Sharanagati)", sa:"शरणागति", text:"The supreme secret: abandon all lesser dharmas and take exclusive refuge in the Divine. The Lord promises: 'I will deliver you from all sins. Fear not.'" },
+  { icon:"🔮", title:"The Three Gunas", sa:"त्रिगुण", text:"All material existence is woven from three threads: Sattva (clarity, goodness), Rajas (passion, activity), and Tamas (inertia, darkness). Liberation means transcending all three." },
+  { icon:"♾️", title:"Brahman", sa:"ब्रह्म", text:"The ultimate, undivided, infinite Absolute — the ground of all being. All that exists is Brahman. To know It is to be free from the cycle of birth and death." }
+];
+
+// ════════════════════════════════════════
+//  STATE
+// ════════════════════════════════════════
+let currentSection = 'home';
+let viewerChapter = null;
+let viewerVerseIdx = 0;
+let bookmarks = JSON.parse(localStorage.getItem('gita_bookmarks') || '[]');
+let quizQuestions = [];
+let quizIdx = 0;
+let quizScore = 0;
+let quizAnswered = false;
+let medInterval = null;
+let medTotalSeconds = 300;
+let medRemaining = 300;
+let medRunning = false;
+let medMantraIdx = 0;
+let medMantraInterval = null;
+let currentMantraIdx = 0;
+
+// ════════════════════════════════════════
+//  NAVIGATION
+// ════════════════════════════════════════
+function showSection(id, btn) {
+  document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
+  document.getElementById(id)?.classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  currentSection = id;
+  window.scrollTo({top:0, behavior:'smooth'});
+  if(id === 'bookmarks-page') renderBookmarks();
+}
+
+function toggleMobileMenu() {
+  const mm = document.getElementById('mobile-menu');
+  mm.style.display = mm.style.display === 'flex' ? 'none' : 'flex';
+}
+
+// ════════════════════════════════════════
+//  RENDER CHAPTERS
+// ════════════════════════════════════════
+function renderChapters(containerId) {
+  const grid = document.getElementById(containerId);
+  if(!grid) return;
+  grid.innerHTML = CHAPTERS.map(ch => `
+    <div class="chapter-card" onclick="openChapter(${ch.num})">
+      <div class="ch-num">${String(ch.num).padStart(2,'0')}</div>
+      <div class="ch-badge">Chapter ${ch.num} · ${ch.theme}</div>
+      <div class="ch-title-en">${ch.en}</div>
+      <div class="ch-title-sa">${ch.sa}</div>
+      <div class="ch-desc">${ch.desc}</div>
+      <div class="ch-meta">
+        <span>${ch.trans}</span>
+        <span class="ch-meta-verses">${ch.verses} verses</span>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ════════════════════════════════════════
+//  VERSE VIEWER
+// ════════════════════════════════════════
+function openChapter(chNum) {
+  viewerChapter = chNum;
+  viewerVerseIdx = 0;
+  const ch = CHAPTERS[chNum - 1];
+  const verses = VERSES.filter(v => v.ch === chNum);
+  if(!verses.length) { showToast("No key verses available for this chapter"); return; }
+
+  document.getElementById('vv-ch-label').textContent = `Chapter ${chNum} · ${ch.theme}`;
+  document.getElementById('vv-ch-title').textContent = ch.en;
+  renderViewerVerse(verses, viewerVerseIdx);
+  document.getElementById('verse-viewer').classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+}
+
+function renderViewerVerse(verses, idx) {
+  const v = verses[idx];
+  const isBookmarked = bookmarks.some(b => b.ref === v.ref);
+  document.getElementById('vv-indicator').textContent = `${idx+1} / ${verses.length}`;
+  document.getElementById('vv-prev').disabled = idx === 0;
+  document.getElementById('vv-next').disabled = idx === verses.length - 1;
+  document.getElementById('vv-content').innerHTML = `
+    <div class="verse-card" data-ref="${v.ref}">
+      <div class="verse-sanskrit">${v.sa}</div>
+      <div class="verse-trans">${v.trans}</div>
+      <div class="verse-meaning">${v.meaning}</div>
+      <div class="verse-actions">
+        <button class="verse-action-btn ${isBookmarked?'bookmarked':''}" onclick="toggleBookmark('${v.ref}')">
+          ${isBookmarked?'★ Saved':'☆ Bookmark'}
+        </button>
+        <button class="verse-action-btn" onclick="copyVerse('${v.ref}')">⧉ Copy</button>
+      </div>
+    </div>
+  `;
+}
+
+function navigateVerse(dir) {
+  const verses = VERSES.filter(v => v.ch === viewerChapter);
+  viewerVerseIdx = Math.max(0, Math.min(verses.length - 1, viewerVerseIdx + dir));
+  renderViewerVerse(verses, viewerVerseIdx);
+}
+
+function closeVerseViewer() {
+  document.getElementById('verse-viewer').classList.add('hidden');
+  document.body.style.overflow = '';
+}
+
+function toggleBookmark(ref) {
+  const v = VERSES.find(x => x.ref === ref);
+  if(!v) return;
+  const idx = bookmarks.findIndex(b => b.ref === ref);
+  if(idx >= 0) {
+    bookmarks.splice(idx, 1);
+    showToast("Bookmark removed");
+  } else {
+    bookmarks.push(v);
+    showToast("✦ Verse bookmarked");
+  }
+  localStorage.setItem('gita_bookmarks', JSON.stringify(bookmarks));
+  const verses = VERSES.filter(v2 => v2.ch === viewerChapter);
+  renderViewerVerse(verses, viewerVerseIdx);
+}
+
+function copyVerse(ref) {
+  const v = VERSES.find(x => x.ref === ref);
+  if(!v) return;
+  const text = `${v.ref}\n${v.sa}\n\n${v.trans}\n\n${v.meaning}`;
+  navigator.clipboard?.writeText(text).then(() => showToast("Verse copied to clipboard"));
+}
+
+// ════════════════════════════════════════
+//  SEARCH
+// ════════════════════════════════════════
+function handleSearch(query) {
+  const resultsEl = document.getElementById('search-results');
+  if(!query || query.length < 2) { resultsEl.classList.add('hidden'); return; }
+  const q = query.toLowerCase();
+  const matches = VERSES.filter(v =>
+    v.ref.toLowerCase().includes(q) ||
+    v.sa.includes(query) ||
+    v.trans.toLowerCase().includes(q) ||
+    v.meaning.toLowerCase().includes(q)
+  ).slice(0, 8);
+
+  if(!matches.length) {
+    const chMatches = CHAPTERS.filter(c => c.en.toLowerCase().includes(q) || c.sa.includes(query) || c.desc.toLowerCase().includes(q)).slice(0,4);
+    if(!chMatches.length) { resultsEl.classList.add('hidden'); return; }
+    resultsEl.innerHTML = chMatches.map(c => `
+      <div class="search-result-item" onclick="openChapter(${c.num});document.getElementById('search-results').classList.add('hidden');">
+        <div class="search-result-ref">Chapter ${c.num} · ${c.en}</div>
+        <div class="search-result-text">${c.desc.substring(0,120)}...</div>
+      </div>`).join('');
+    resultsEl.classList.remove('hidden');
+    return;
+  }
+
+  resultsEl.innerHTML = matches.map(v => `
+    <div class="search-result-item" onclick="openSearchVerse('${v.ref}');document.getElementById('search-results').classList.add('hidden');document.getElementById('search-input').value='';">
+      <div class="search-result-ref">${v.ref}</div>
+      <div class="search-result-text">${v.meaning.substring(0,120)}...</div>
+    </div>`).join('');
+  resultsEl.classList.remove('hidden');
+}
+
+function openSearchVerse(ref) {
+  const v = VERSES.find(x => x.ref === ref);
+  if(!v) return;
+  viewerChapter = v.ch;
+  const verses = VERSES.filter(x => x.ch === v.ch);
+  viewerVerseIdx = verses.findIndex(x => x.ref === ref);
+  const ch = CHAPTERS[v.ch - 1];
+  document.getElementById('vv-ch-label').textContent = `Chapter ${v.ch} · ${ch.theme}`;
+  document.getElementById('vv-ch-title').textContent = ch.en;
+  renderViewerVerse(verses, viewerVerseIdx);
+  document.getElementById('verse-viewer').classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+}
+
+document.addEventListener('click', e => {
+  if(!e.target.closest('#search-section')) {
+    document.getElementById('search-results').classList.add('hidden');
+  }
+});
+
+// ════════════════════════════════════════
+//  DAILY VERSE
+// ════════════════════════════════════════
+function renderDailyVerse() {
+  const day = Math.floor(Date.now() / 86400000);
+  const v = VERSES[day % VERSES.length];
+  document.getElementById('dvb-ref').textContent = `${v.ref} · Chapter ${v.ch}`;
+  document.getElementById('dvb-sanskrit').textContent = v.sa.split('\n')[0];
+  document.getElementById('dvb-translation').textContent = v.meaning;
+}
+
+// ════════════════════════════════════════
+//  QUIZ
+// ════════════════════════════════════════
+function startQuiz() {
+  quizQuestions = [...QUIZ_QUESTIONS].sort(() => Math.random() - 0.5).slice(0, 10);
+  quizIdx = 0;
+  quizScore = 0;
+  document.getElementById('quiz-score-panel').classList.remove('show');
+  document.getElementById('quiz-card').style.display = 'block';
+  renderQuizQuestion();
+}
+
+function renderQuizQuestion() {
+  if(quizIdx >= quizQuestions.length) { showQuizScore(); return; }
+  quizAnswered = false;
+  const q = quizQuestions[quizIdx];
+  const progress = (quizIdx / quizQuestions.length) * 100;
+  document.getElementById('quiz-progress').style.width = progress + '%';
+  document.getElementById('quiz-q-label').textContent = `Question ${quizIdx+1} of ${quizQuestions.length}`;
+  document.getElementById('quiz-q-sa').textContent = q.q_sa;
+  document.getElementById('quiz-q-en').textContent = q.q_en;
+  document.getElementById('quiz-feedback').className = 'quiz-feedback';
+  document.getElementById('quiz-feedback').textContent = '';
+  document.getElementById('quiz-next').className = 'quiz-next-btn';
+
+  const optsEl = document.getElementById('quiz-options');
+  optsEl.innerHTML = q.options.map((opt, i) => `
+    <button class="quiz-option" onclick="answerQuiz(${i})">${opt}</button>
+  `).join('');
+}
+
+function answerQuiz(idx) {
+  if(quizAnswered) return;
+  quizAnswered = true;
+  const q = quizQuestions[quizIdx];
+  const buttons = document.querySelectorAll('.quiz-option');
+  buttons.forEach(b => b.disabled = true);
+  buttons[idx].classList.add(idx === q.correct ? 'correct' : 'wrong');
+  if(idx !== q.correct) buttons[q.correct].classList.add('correct');
+
+  const fb = document.getElementById('quiz-feedback');
+  fb.className = 'quiz-feedback show ' + (idx === q.correct ? 'correct' : 'wrong');
+  fb.textContent = idx === q.correct ? '✓ Correct! ' + q.explanation : '✗ ' + q.explanation;
+
+  if(idx === q.correct) quizScore++;
+  document.getElementById('quiz-next').className = 'quiz-next-btn show';
+}
+
+function nextQuizQuestion() {
+  quizIdx++;
+  renderQuizQuestion();
+}
+
+function showQuizScore() {
+  document.getElementById('quiz-progress').style.width = '100%';
+  document.getElementById('quiz-q-label').textContent = 'Complete!';
+  document.getElementById('quiz-q-sa').textContent = '';
+  document.getElementById('quiz-q-en').textContent = '';
+  document.getElementById('quiz-options').innerHTML = '';
+  document.getElementById('quiz-feedback').className = 'quiz-feedback';
+  document.getElementById('quiz-next').className = 'quiz-next-btn';
+  document.getElementById('quiz-score-num').textContent = `${quizScore}/${quizQuestions.length}`;
+  const pct = Math.round((quizScore / quizQuestions.length) * 100);
+  let msg = pct >= 80 ? "Excellent! A true student of the Gita! 🙏" :
+            pct >= 60 ? "Good effort! Keep studying the sacred verses." :
+            "Keep practicing. The wisdom deepens with time. ॐ";
+  document.getElementById('quiz-score-msg').textContent = msg;
+  document.getElementById('quiz-score-panel').classList.add('show');
+}
+
+// ════════════════════════════════════════
+//  MEDITATION TIMER
+// ════════════════════════════════════════
+function formatTime(s) {
+  const m = Math.floor(s / 60);
+  const sec = s % 60;
+  return String(m).padStart(2,'0') + ':' + String(sec).padStart(2,'0');
+}
+
+function updateMedDisplay() {
+  document.getElementById('med-time-display').textContent = formatTime(medRemaining);
+  const circumference = 515;
+  const progress = medRemaining / medTotalSeconds;
+  const offset = circumference * (1 - progress);
+  document.getElementById('med-progress-circle').style.strokeDashoffset = offset;
+}
+
+function toggleMeditation() {
+  if(medRunning) {
+    pauseMeditation();
+  } else {
+    startMeditation();
+  }
+}
+
+function startMeditation() {
+  medRunning = true;
+  document.getElementById('med-start-btn').textContent = '⏸ Pause';
+  document.getElementById('med-start-btn').classList.add('active');
+  medInterval = setInterval(() => {
+    if(medRemaining <= 0) {
+      resetMeditation();
+      showToast("🙏 Meditation complete. Jai Sri Krishna!");
+      return;
+    }
+    medRemaining--;
+    updateMedDisplay();
+  }, 1000);
+
+  // Cycle mantras
+  medMantraInterval = setInterval(() => {
+    medMantraIdx = (medMantraIdx + 1) % MANTRAS.length;
+    document.getElementById('med-mantra-display').textContent = MANTRAS[currentMantraIdx].sa;
+    document.getElementById('med-mantra-en').textContent = MANTRAS[currentMantraIdx].en;
+  }, 8000);
+}
+
+function pauseMeditation() {
+  medRunning = false;
+  clearInterval(medInterval);
+  clearInterval(medMantraInterval);
+  document.getElementById('med-start-btn').textContent = '▶ Resume';
+  document.getElementById('med-start-btn').classList.remove('active');
+}
+
+function resetMeditation() {
+  medRunning = false;
+  clearInterval(medInterval);
+  clearInterval(medMantraInterval);
+  medRemaining = medTotalSeconds;
+  document.getElementById('med-start-btn').textContent = '▶ Begin';
+  document.getElementById('med-start-btn').classList.remove('active');
+  updateMedDisplay();
+}
+
+function setMedDuration(minutes, btn) {
+  resetMeditation();
+  medTotalSeconds = minutes * 60;
+  medRemaining = medTotalSeconds;
+  updateMedDisplay();
+  document.querySelectorAll('.med-dur-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+}
+
+function renderMantraButtons() {
+  const c = document.getElementById('mantra-select-btns');
+  if(!c) return;
+  c.innerHTML = MANTRAS.map((m, i) => `
+    <button class="med-dur-btn ${i===currentMantraIdx?'selected':''}"
+      onclick="selectMantra(${i},this)" style="font-family:'Noto Serif Devanagari',serif;font-size:0.85rem;padding:0.4rem 0.8rem;">
+      ${m.sa.split(' ').slice(0,2).join(' ')}...
+    </button>
+  `).join('');
+}
+
+function selectMantra(idx, btn) {
+  currentMantraIdx = idx;
+  document.querySelectorAll('#mantra-select-btns .med-dur-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  document.getElementById('med-mantra-display').textContent = MANTRAS[idx].sa;
+  document.getElementById('med-mantra-en').textContent = MANTRAS[idx].en;
+}
+
+// ════════════════════════════════════════
+//  PHILOSOPHY
+// ════════════════════════════════════════
+function renderPhilosophy() {
+  const g = document.getElementById('phil-grid');
+  if(!g) return;
+  g.innerHTML = PHILOSOPHY.map(p => `
+    <div class="phil-card">
+      <div class="phil-icon">${p.icon}</div>
+      <div class="phil-title">${p.title}</div>
+      <div class="phil-title-sa">${p.sa}</div>
+      <div class="phil-text">${p.text}</div>
+    </div>
+  `).join('');
+
+  // Famous verses
+  const famousRefs = ["2.47","4.7","4.8","2.20","11.33","18.66","9.22","6.5","15.15","2.22"];
+  const fv = document.getElementById('famous-verses-list');
+  if(!fv) return;
+  fv.innerHTML = famousRefs.map(ref => {
+    const v = VERSES.find(x => x.ref === ref);
+    if(!v) return '';
+    return `
+      <div class="bookmark-item" onclick="openSearchVerse('${v.ref}')">
+        <button class="bookmark-remove" onclick="event.stopPropagation();toggleBookmark('${v.ref}')">★</button>
+        <div class="bookmark-ref">${v.ref}</div>
+        <div class="bookmark-sanskrit">${v.sa.split('\n')[0]}</div>
+        <div class="bookmark-meaning">${v.meaning.substring(0,200)}...</div>
+      </div>
+    `;
+  }).join('');
+}
+
+// ════════════════════════════════════════
+//  BOOKMARKS
+// ════════════════════════════════════════
+function renderBookmarks() {
+  const list = document.getElementById('bookmark-list');
+  if(!list) return;
+  if(!bookmarks.length) {
+    list.innerHTML = `<div class="empty-state"><div class="empty-state-icon">☆</div>No bookmarks yet.<br>Open any chapter and save your favourite verses.</div>`;
+    return;
+  }
+  list.innerHTML = bookmarks.map(v => `
+    <div class="bookmark-item" onclick="openSearchVerse('${v.ref}')">
+      <button class="bookmark-remove" onclick="event.stopPropagation();removeBookmark('${v.ref}')">✕</button>
+      <div class="bookmark-ref">${v.ref}</div>
+      <div class="bookmark-sanskrit">${v.sa.split('\n')[0]}</div>
+      <div class="bookmark-meaning">${v.meaning.substring(0,200)}...</div>
+    </div>
+  `).join('');
+}
+
+function removeBookmark(ref) {
+  bookmarks = bookmarks.filter(b => b.ref !== ref);
+  localStorage.setItem('gita_bookmarks', JSON.stringify(bookmarks));
+  renderBookmarks();
+  showToast("Bookmark removed");
+}
+
+// ════════════════════════════════════════
+//  TOAST
+// ════════════════════════════════════════
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+// ════════════════════════════════════════
+//  INIT
+// ════════════════════════════════════════
+window.addEventListener('DOMContentLoaded', () => {
+  // Loader
+  setTimeout(() => {
+    document.getElementById('loader').classList.add('fade-out');
+    setTimeout(() => document.getElementById('loader').remove(), 800);
+  }, 2200);
+
+  // Render
+  renderChapters('home-chapters-grid');
+  renderChapters('chapters-grid-full');
+  renderDailyVerse();
+  renderPhilosophy();
+  renderMantraButtons();
+  updateMedDisplay();
+  startQuiz();
+
+  // Set initial mantra display
+  document.getElementById('med-mantra-display').textContent = MANTRAS[0].sa;
+  document.getElementById('med-mantra-en').textContent = MANTRAS[0].en;
+
+  // Close viewer on backdrop click
+  document.getElementById('verse-viewer').addEventListener('click', function(e) {
+    if(e.target === this) closeVerseViewer();
+  });
+
+  // Close search on ESC
+  document.addEventListener('keydown', e => {
+    if(e.key === 'Escape') {
+      closeVerseViewer();
+      document.getElementById('search-results').classList.add('hidden');
+    }
+  });
+});
+</script>
+</body>
+</html>
